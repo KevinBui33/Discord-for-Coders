@@ -7,7 +7,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
   },
 });
 
@@ -21,10 +22,18 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("New user has conected");
+  console.log(`User connect: ${socket.id}`);
+
+  socket.on("join", () => {
+    socket.join(socket.id);
+  });
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
+  });
+
+  socket.on("send_msg", (data) => {
+    console.log(data);
   });
 });
 

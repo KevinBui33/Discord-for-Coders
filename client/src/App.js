@@ -1,5 +1,5 @@
 import "./App.css";
-import Chat from "./Components/Chat";
+import Chat from "./Components/Chat/Chat";
 import Header from "./Components/Header";
 import SideBar from "./Components/SideBar";
 
