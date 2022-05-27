@@ -12,7 +12,6 @@ function Header() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={console.log("Clicked")}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
