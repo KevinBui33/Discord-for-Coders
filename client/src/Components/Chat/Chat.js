@@ -10,6 +10,8 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import React, { useEffect, useState } from "react";
 import ChatWindow from "./ChatWindow";
+import Header from "../Header";
+import SideBar from "../SideBar";
 import * as Api from "../../Api/api";
 import socket from "../../Service/socket";
 
@@ -25,25 +27,31 @@ function Chat() {
   };
 
   return (
-    <div className="chat">
-      <ChatWindow />
-      <FormControl fullWidth>
-        <OutlinedInput
-          id="outlined-adornment-weight"
-          onChange={(e) => {
-            setMsg(e.target.value);
-            console.log(msg);
-          }}
-          placeholder="Enter Text"
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton onClick={sendMsg}>
-                <SendIcon />
-              </IconButton>
-            </InputAdornment>
-          }
-        />
-      </FormControl>
+    <div className="App">
+      <Header />
+      <div className="ChatBox">
+        <SideBar />
+        <div className="chat">
+          <ChatWindow />
+          <FormControl fullWidth>
+            <OutlinedInput
+              id="outlined-adornment-weight"
+              onChange={(e) => {
+                setMsg(e.target.value);
+                console.log(msg);
+              }}
+              placeholder="Enter Text"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={sendMsg}>
+                    <SendIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+        </div>
+      </div>
     </div>
   );
 }

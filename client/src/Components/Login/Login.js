@@ -19,7 +19,10 @@ import React from "react";
 const theme = createTheme();
 
 function Login() {
-  const handleSubmit = () => {};
+  const login = (event) => {
+    const data = new FormData(event.currentTarget);
+    console.log(data.get("e"));
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -39,12 +42,7 @@ function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={login} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -84,7 +82,7 @@ function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
