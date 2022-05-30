@@ -1,7 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
+const db = require("./db/db");
 const { Server } = require("socket.io");
+
+const credRoute = require("./routes/credentails/credentailsRoute");
 
 const app = express();
 const server = http.createServer(app);
@@ -15,11 +18,15 @@ const io = new Server(server, {
 var PORT = 5000 | process.env.PORT;
 
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
-  console.log("Got request");
-  res.send("Hello World");
+app.get("/", async (req, res) => {
+  const accs = await db.query("select * from accounts", []);
+  res.json(accs.rows);
 });
+
+app.use(credRoute);
 
 io.on("connection", (socket) => {
   console.log(`User connect: ${socket.id}`);

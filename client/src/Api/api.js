@@ -1,19 +1,12 @@
 import axios from "axios";
+import { resolve } from "./resolve";
 
 const baseURL = "http://localhost:5000";
 
-const fetch = async (method, url, data) => {
-  const newURL = baseURL + url;
-
-  return axios({ method, url: newURL, data })
-    .then((res) => res)
-    .catch((err) => console.error(err));
+export const test = async () => {
+  return resolve(axios.get(baseURL));
 };
 
-const get = async (url, data) => {
-  return fetch("get", url, data);
-};
-
-export const test = () => {
-  return get("", {});
+export const createAccount = async (data) => {
+  return resolve(axios.post(baseURL + "/register", data));
 };
