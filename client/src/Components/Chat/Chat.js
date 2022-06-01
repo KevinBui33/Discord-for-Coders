@@ -18,7 +18,7 @@ function Chat() {
 
   useEffect(() => {
     console.log("Connecting user");
-    socket.emit("join");
+    socket.open();
   }, []);
 
   const sendMsg = () => {
