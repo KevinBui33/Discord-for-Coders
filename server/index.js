@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
+const flash = require("express-flash");
+const session = require("express-session");
 const db = require("./db/db");
 const { Server } = require("socket.io");
-
 const credRoute = require("./routes/credentails/credentailsRoute");
+const passport = require("passport");
 
 const app = express();
 const server = http.createServer(app);
@@ -20,6 +22,16 @@ var PORT = 5000 | process.env.PORT;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(flash());
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/", async (req, res) => {
   const accs = await db.query("select * from accounts", []);

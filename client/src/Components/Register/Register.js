@@ -13,10 +13,13 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as api from "../../Api/api";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 function Register() {
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -25,10 +28,14 @@ function Register() {
       username: data.get("username"),
       email: data.get("email"),
       password: data.get("password"),
-      created_on: Date.now().toString(),
+      created_on: new Date(Date.now()).toISOString(),
     });
 
     console.log(newAcc);
+
+    if (newAcc.data != null) {
+      navigate("/login");
+    }
   };
 
   return (
@@ -88,7 +95,9 @@ function Register() {
               </Grid>
             </Grid>
             <Button
-              type="submit"
+              type="
+              
+              "
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

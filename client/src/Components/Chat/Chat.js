@@ -1,7 +1,5 @@
 import "./Chat.css";
 import {
-  TextField,
-  Button,
   FormControl,
   OutlinedInput,
   InputAdornment,
@@ -12,13 +10,14 @@ import React, { useEffect, useState } from "react";
 import ChatWindow from "./ChatWindow";
 import Header from "../Header";
 import SideBar from "../SideBar";
-import * as Api from "../../Api/api";
+import * as api from "../../Api/api";
 import socket from "../../Service/socket";
 
 function Chat() {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
+    console.log("Connecting user");
     socket.emit("join");
   }, []);
 

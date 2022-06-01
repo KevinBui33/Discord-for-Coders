@@ -10,3 +10,7 @@ export const test = async () => {
 export const createAccount = async (data) => {
   return resolve(axios.post(baseURL + "/register", data));
 };
+
+export const loginLocal = async (data) => {
+  return resolve(axios.post(baseURL + "/login", data));
+};

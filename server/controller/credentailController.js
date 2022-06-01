@@ -1,32 +1,55 @@
 const bcrypt = require("bcrypt");
 const db = require("../db/db");
+const passport = require("passport");
+const initPassport = require("../utils/passport-config");
 
-const checkAuth = (req, res, next) => {};
+initPassport(passport);
 
 const register = async (req, res) => {
   try {
     // Hash password
-    console.log(req.body);
     const hashedPass = await bcrypt.hash(req.body.password, 10);
+
     // insert new account to DB
-
     const { username, email, created_on } = req.body;
-    const newAcc = await db.query(
-      "INSERT INTO accounts (username, password, email, created_on) VALUES($1, $2, $3, $4)",
-      [username, hashedPass, email, created_on]
-    );
-
-    console.log(newAcc);
-
-    res.json(newAcc);
+    await db
+      .query(
+        "INSERT INTO accounts(username, password, email, created_on) VALUES($1, $2, $3, $4) RETURNING *",
+        [username, hashedPass, email, created_on]
+      )
+      .then((data) => {
+        res.status(200);
+        res.json(data.rows[0]);
+      })
+      .catch((err) => console.log(err));
   } catch (err) {
-    // send error msg
+    console.error(err);
   }
 };
 
-const login = (req, res) => {};
+const login = (req, res) => {
+  res.status(200);
+  res.json({ user_id: req.user.rows[0].user_id });
+};
+
+const checkAuth = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  }
+  res.redirect("/login");
+};
+
+const checkNotAuth = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    res.redirect("/chat");
+  }
+
+  next();
+};
 
 module.exports = {
   register,
   login,
+  checkAuth,
+  checkNotAuth,
 };

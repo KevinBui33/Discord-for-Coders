@@ -14,14 +14,28 @@ import {
   Link,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import * as api from "../../Api/api";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 function Login() {
-  const login = (event) => {
+  const navigate = useNavigate();
+
+  const login = async (event) => {
+    event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data.get("e"));
+
+    const res = await api.loginLocal({
+      email: data.get("email"),
+      password: data.get("password"),
+    });
+
+    console.log(res);
+    if (res.data != null) {
+      navigate("/chat");
+    }
   };
 
   return (
