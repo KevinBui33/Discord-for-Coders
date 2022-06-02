@@ -16,6 +16,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
+// TODO: Handle error messages
+
 const theme = createTheme();
 
 function Register() {
