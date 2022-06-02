@@ -17,7 +17,6 @@ function Chat() {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
-    console.log("Connecting user");
     socket.open();
   }, []);
 
