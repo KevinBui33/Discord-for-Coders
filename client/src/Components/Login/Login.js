@@ -19,6 +19,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
+// TODO: Make error message disappear when inputting text field
 const theme = createTheme();
 
 function Login() {
