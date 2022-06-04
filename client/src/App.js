@@ -4,6 +4,8 @@ import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import Chat from "./Components/Chat/Chat";
 
+// TODO: Add socket provider (use react context)
+
 function App() {
   return (
     <BrowserRouter>

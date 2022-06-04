@@ -1,12 +1,11 @@
 import "../Styles/SideBar.css";
-import React from "react";
+import React, { useState } from "react";
+import FriendPopUp from "./Friend/FriendPopUp";
 
 // TODO: Have the ability to add friends
 
 function SideBar() {
-  const addFriend = () => {
-    console.log("adding friend ");
-  };
+  const [showPopUp, setShowPopUp] = useState(false);
 
   return (
     <div className="sidebar">
@@ -27,9 +26,10 @@ function SideBar() {
           <div id="title">Overview</div>
         </li>
         <li className="row">
-          <div id="title" onClick={addFriend}>
+          <div id="title" onClick={() => setShowPopUp(true)}>
             Add Friend
           </div>
+          <FriendPopUp trigger={showPopUp} setTrigger={setShowPopUp} />
         </li>
       </ul>
     </div>
