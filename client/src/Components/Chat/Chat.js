@@ -13,7 +13,6 @@ import SideBar from "../SideBar";
 import * as api from "../../Api/api";
 import socket from "../../Service/socket";
 
-// TODO: Have the ability to add friends
 // TODO: Can send message to friends
 // TODO: Display the messages to both parties
 
