@@ -14,3 +14,7 @@ export const createAccount = async (data) => {
 export const loginLocal = async (data) => {
   return resolve(axios.post(baseURL + "/login", data));
 };
+
+export const getUsers = async (data) => {
+  return resolve(axios.get(baseURL + "/users", { params: data }));
+};

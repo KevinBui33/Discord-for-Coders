@@ -11,21 +11,12 @@ import ChatWindow from "./ChatWindow";
 import Header from "../Header";
 import SideBar from "../SideBar";
 import * as api from "../../Api/api";
-import socket from "../../Service/socket";
 
 // TODO: Can send message to friends
 // TODO: Display the messages to both parties
 
 function Chat() {
   const [msg, setMsg] = useState("");
-
-  useEffect(() => {
-    socket.open();
-  }, []);
-
-  const sendMsg = () => {
-    socket.emit("send_msg", { msg });
-  };
 
   return (
     <div className="App">
@@ -44,7 +35,7 @@ function Chat() {
               placeholder="Enter Text"
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton onClick={sendMsg}>
+                  <IconButton onClick={() => console.log("sending msg")}>
                     <SendIcon />
                   </IconButton>
                 </InputAdornment>

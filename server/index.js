@@ -6,6 +6,7 @@ const session = require("express-session");
 const db = require("./db/db");
 const { Server } = require("socket.io");
 const credRoute = require("./routes/credentails/credentailsRoute");
+const userRoute = require("./routes/user/userRoute");
 const passport = require("passport");
 
 const app = express();
@@ -33,12 +34,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/", async (req, res) => {
-  const accs = await db.query("select * from accounts", []);
-  res.json(accs.rows);
-});
-
 app.use(credRoute);
+app.use(userRoute);
 
 io.on("connection", (socket) => {
   console.log(`User connect: ${socket.id}`);
