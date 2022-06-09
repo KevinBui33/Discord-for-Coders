@@ -1,12 +1,19 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
-const flash = require("express-flash");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
+
 const db = require("./db/db");
 const { Server } = require("socket.io");
+
 const credRoute = require("./routes/credentails/credentailsRoute");
 const userRoute = require("./routes/user/userRoute");
+
 const passport = require("passport");
 
 const app = express();
@@ -20,10 +27,14 @@ const io = new Server(server, {
 
 var PORT = 5000 | process.env.PORT;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(flash());
 app.use(
   session({
     secret: "secret",
@@ -31,12 +42,19 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(cookieParser("secret"));
 app.use(passport.initialize());
 app.use(passport.session());
+require("./utils/passport-config")(passport);
 
 app.use(credRoute);
 app.use(userRoute);
 
+// app.get("/getuser", (req, res) => {
+//   res.send(req.user);
+// });
+
+// TODO: Move socket io to another file
 io.on("connection", (socket) => {
   console.log(`User connect: ${socket.id}`);
 

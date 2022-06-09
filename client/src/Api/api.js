@@ -3,8 +3,10 @@ import { resolve } from "./resolve";
 
 const baseURL = "http://localhost:5000";
 
+axios.defaults.withCredentials = true;
+
 export const test = async () => {
-  return resolve(axios.get(baseURL));
+  return resolve(axios.get(baseURL + "/getuser"));
 };
 
 export const createAccount = async (data) => {
@@ -17,4 +19,8 @@ export const loginLocal = async (data) => {
 
 export const getUsers = async (data) => {
   return resolve(axios.get(baseURL + "/users", { params: data }));
+};
+
+export const addFriend = async (data) => {
+  return resolve(axios.post(baseURL + "/user", data));
 };

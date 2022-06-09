@@ -65,6 +65,11 @@ function FriendPopUp({ trigger, setTrigger }) {
     fetchData().catch((err) => console.log(err));
   }, [search]);
 
+  const sendRequest = async (data) => {
+    console.log(data);
+    await api.addFriend({});
+  };
+
   return trigger ? (
     <div className="popup">
       <div className="popup-inner">
@@ -95,7 +100,14 @@ function FriendPopUp({ trigger, setTrigger }) {
               <ListItem
                 key={user.user_id}
                 disableGutters
-                secondaryAction={<Button>Add Friend</Button>}
+                secondaryAction={
+                  <Button
+                    style={{ backgroundColor: "#3446FE", color: "white" }}
+                    onClick={() => sendRequest(user.user_id)}
+                  >
+                    Add Friend
+                  </Button>
+                }
               >
                 <ListItemAvatar>
                   <Avatar {...stringAvatar(user.username)} />
