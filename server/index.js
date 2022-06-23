@@ -15,6 +15,7 @@ const credRoute = require("./routes/credentails/credentailsRoute");
 const userRoute = require("./routes/user/userRoute");
 
 const passport = require("passport");
+const { addFriend } = require("./controller/socketController");
 
 const app = express();
 const server = http.createServer(app);
@@ -58,9 +59,9 @@ app.use(userRoute);
 io.on("connection", (socket) => {
   console.log(`User connect: ${socket.id}`);
 
-  socket.on("join", () => {
-    socket.join(socket.id);
-  });
+  // socket.on("join", () => {
+  //   socket.join(socket.id);
+  // });
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
@@ -69,6 +70,8 @@ io.on("connection", (socket) => {
   socket.on("send_msg", (data) => {
     console.log(data);
   });
+
+  socket.on("add_friend", addFriend);
 });
 
 server.listen(PORT, () => {

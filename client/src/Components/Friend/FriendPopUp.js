@@ -2,78 +2,54 @@ import {
   Box,
   TextField,
   IconButton,
+  Typography,
   Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import * as api from "../../Api/api";
 import "./FriendPopUp.css";
-
-const stringToColor = (string) => {
-  let hash = 0;
-  let i;
-
-  /* eslint-disable no-bitwise */
-  for (i = 0; i < string.length; i += 1) {
-    hash = string.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  let color = "#";
-
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += `00${value.toString(16)}`.slice(-2);
-  }
-  /* eslint-enable no-bitwise */
-
-  return color;
-};
-
-const stringAvatar = (username) => {
-  return {
-    sx: {
-      bgcolor: stringToColor(username),
-    },
-    children: username
-      .split(" ")
-      .map((ch) => ch.charAt(0).toUpperCase())
-      .join(""),
-  };
-};
+import { SocketContext } from "../../Context/SocketProvider";
 
 function FriendPopUp({ trigger, setTrigger }) {
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState([]);
+  const [status, setStatus] = useState({});
+  const socket = useContext(SocketContext);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (search != "") {
-        const data = await api.getUsers({ username: search });
-        console.log(data);
+  let statusComp;
 
-        setResults(data.data);
-      } else {
-        setResults([]);
+  const addFriend = async (data) => {
+    console.log(`Sending friend request to ${search}`);
+    await socket.emit("add_friend", search, ({ err, done }) => {
+      // Display if friend request worked
+      if (err) {
+        setStatus({ stat: "error", msg: err });
       }
-    };
-
-    fetchData().catch((err) => console.log(err));
-  }, [search]);
-
-  const sendRequest = async (data) => {
-    console.log(data);
-    await api.addFriend({});
+    });
+    console.log(status);
   };
+
+  if (status.stat == "error") {
+    statusComp = (
+      <Alert sx={{ width: "95%", marginBottom: "10px" }} severity="error">
+        {status.msg}
+      </Alert>
+    );
+  } else if (status.stat == "sucess") {
+    statusComp = (
+      <Alert sx={{ width: "95%", marginBottom: "10px" }}>
+        Friend request sent
+      </Alert>
+    );
+  }
 
   return trigger ? (
     <div className="popup">
       <div className="popup-inner">
         <div className="close-btn">
+          <Typography variant="h5">Add a Friend</Typography>
           <IconButton onClick={() => setTrigger(false)}>
             <CloseIcon />
           </IconButton>
@@ -85,8 +61,11 @@ function FriendPopUp({ trigger, setTrigger }) {
             flexDirection: "column",
           }}
         >
+          {statusComp}
           <TextField
             fullWidth
+            error={search === ""}
+            helperText={search === "" ? "Please Enter a username" : ""}
             id="friend-username"
             label="Add a friend"
             name="friend-username"
@@ -95,28 +74,17 @@ function FriendPopUp({ trigger, setTrigger }) {
               setSearch(e.target.value);
             }}
           />
-          <List sx={{ width: "90%", paddingTop: "20px" }}>
-            {results.map((user) => (
-              <ListItem
-                key={user.user_id}
-                disableGutters
-                secondaryAction={
-                  <Button
-                    style={{ backgroundColor: "#3446FE", color: "white" }}
-                    onClick={() => sendRequest(user.user_id)}
-                  >
-                    Add Friend
-                  </Button>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar {...stringAvatar(user.username)} />
-                </ListItemAvatar>
-
-                <ListItemText primary={user.username} />
-              </ListItem>
-            ))}
-          </List>
+          <Box
+            sx={{ display: "flex", justifyContent: "flex-end", width: "100%" }}
+          >
+            <Button
+              sx={{ marginTop: "20px" }}
+              variant="contained"
+              onClick={addFriend}
+            >
+              Add
+            </Button>
+          </Box>
         </Box>
       </div>
     </div>

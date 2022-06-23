@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import Chat from "./Components/Chat/Chat";
+import { SocketProvider } from "./Context/SocketProvider";
 
 // TODO: Add socket provider (use react context)
 
