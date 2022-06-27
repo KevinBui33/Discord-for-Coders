@@ -15,4 +15,5 @@ module.exports = {
     console.log("executed query", { text, duration, rows: res.rowCount });
     return res;
   },
+  pool,
 };

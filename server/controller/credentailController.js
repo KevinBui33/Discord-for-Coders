@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 const db = require("../db/db");
 
 const register = async (req, res) => {
@@ -23,11 +24,18 @@ const register = async (req, res) => {
   }
 };
 
-const login = (req, res) => {
-  res.status(200);
-  console.log("Sucessful login");
-  console.log(req.user);
-  res.json({ user_id: req.user.user_id });
+const login = (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) throw err;
+    if (!user) res.send("User does not exists");
+    else {
+      req.logIn(user, (err) => {
+        if (err) throw err;
+        res.send("sucessful authenticated");
+        console.log(req.user);
+      });
+    }
+  })(req, res, next);
 };
 
 const checkAuth = (req, res, next) => {

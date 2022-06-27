@@ -12,6 +12,7 @@ import Header from "../Header";
 import SideBar from "../SideBar";
 import * as api from "../../Api/api";
 import { SocketContext, SocketProvider } from "../../Context/SocketProvider";
+import axios from "axios";
 
 // TODO: Can send message to friends
 // TODO: Display the messages to both parties
@@ -21,34 +22,38 @@ function Chat() {
   const socket = useContext(SocketContext);
 
   return (
-    <SocketProvider>
-      <div className="App">
-        <Header />
-        <div className="ChatBox">
-          <SideBar />
-          <div className="chat">
-            <ChatWindow />
-            <FormControl fullWidth>
-              <OutlinedInput
-                id="outlined-adornment-weight"
-                onChange={(e) => {
-                  setMsg(e.target.value);
-                  console.log(msg);
-                }}
-                placeholder="Enter Text"
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => console.log("sending msg")}>
-                      <SendIcon />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-          </div>
+    <div className="App">
+      <Header />
+      <div className="ChatBox">
+        <SideBar />
+        <div className="chat">
+          <ChatWindow />
+          <FormControl fullWidth>
+            <OutlinedInput
+              id="outlined-adornment-weight"
+              onChange={(e) => {
+                setMsg(e.target.value);
+                console.log(msg);
+              }}
+              placeholder="Enter Text"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={async () => {
+                      await socket.emit("whoami", (err, msg) => {
+                        console.log(err, msg);
+                      });
+                    }}
+                  >
+                    <SendIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
         </div>
       </div>
-    </SocketProvider>
+    </div>
   );
 }
 

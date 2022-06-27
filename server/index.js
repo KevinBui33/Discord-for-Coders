@@ -1,33 +1,44 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
+const PORT = 5000 | process.env.PORT;
 
 const express = require("express");
 const cors = require("cors");
-const http = require("http");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-
-const db = require("./db/db");
+const pgSession = require("connect-pg-simple")(session);
 const { Server } = require("socket.io");
-
-const credRoute = require("./routes/credentails/credentailsRoute");
-const userRoute = require("./routes/user/userRoute");
-
 const passport = require("passport");
-const { addFriend } = require("./controller/socketController");
-
 const app = express();
-const server = http.createServer(app);
+const server = require("http").createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
-var PORT = 5000 | process.env.PORT;
+//Routes
+const credRoute = require("./routes/credentails/credentailsRoute");
+const userRoute = require("./routes/user/userRoute");
 
+const { addFriend } = require("./controller/socketController");
+const { pool } = require("./db/db");
+
+// Connect to DB
+
+// Setup for session storage and express link
+const sessionMiddleware = session({
+  store: new pgSession({
+    pool: pool,
+  }),
+  secret: "secret",
+  resave: false,
+  saveUninitialized: false,
+});
+
+// Express setup
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -36,42 +47,60 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(
-  session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
 app.use(cookieParser("secret"));
+
+// Add passport to express
+app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
-require("./utils/passport-config")(passport);
-
 app.use(credRoute);
 app.use(userRoute);
 
-// app.get("/getuser", (req, res) => {
-//   res.send(req.user);
-// });
+require("./utils/passport-config")(passport);
+
+app.get("/test", (req, res) => {
+  console.log(req.isAuthenticated());
+  console.log(req.session);
+
+  const isAuthenticated = !!req.user;
+  if (isAuthenticated) {
+    console.log(`user is authenticated, session is ${req.session.id}`);
+  } else {
+    console.log("unknown user");
+  }
+  res.send(req.user);
+});
+
+// Socket stuff
+const wrap = (middleware) => (socket, next) =>
+  middleware(socket.request, {}, next);
+
+io.use(wrap(sessionMiddleware));
+io.use(wrap(passport.initialize()));
+io.use(wrap(passport.session()));
+
+io.use((socket, next) => {
+  if (socket.request.user) {
+    next();
+  } else {
+    console.log("An error occured ");
+    next();
+  }
+});
 
 // TODO: Move socket io to another file
-io.on("connection", (socket) => {
-  console.log(`User connect: ${socket.id}`);
-
-  // socket.on("join", () => {
-  //   socket.join(socket.id);
-  // });
+io.on("connect", (socket) => {
+  console.log(`user connected: ${socket.id}`);
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
 
-  socket.on("send_msg", (data) => {
-    console.log(data);
+  socket.on("whoami", (cb) => {
+    console.log("whoami being called");
+    console.log(socket.request.session);
+    cb(socket.request.user);
   });
-
-  socket.on("add_friend", addFriend);
 });
 
 server.listen(PORT, () => {

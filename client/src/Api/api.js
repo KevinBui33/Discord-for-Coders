@@ -14,7 +14,20 @@ export const createAccount = async (data) => {
 };
 
 export const loginLocal = async (data) => {
-  return resolve(axios.post(baseURL + "/login", data));
+  axios
+    .post(baseURL + "/login", data)
+    .then((res) => {
+      console.log(res);
+      if (res.data) {
+        console.log("got an acesstoken");
+        localStorage.setItem("user", JSON.stringify(res.data));
+      }
+
+      return res.data;
+    })
+    .catch((err) => {
+      throw err;
+    });
 };
 
 export const getUsers = async (data) => {

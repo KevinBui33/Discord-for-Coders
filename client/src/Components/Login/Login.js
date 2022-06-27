@@ -18,6 +18,8 @@ import * as api from "../../Api/api";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { io } from "socket.io-client";
+import axios from "axios";
 
 // TODO: Make error message disappear when inputting text field
 const theme = createTheme();
@@ -33,14 +35,9 @@ function Login() {
   const [errorMsg, setErrorMsg] = useState(false);
 
   const login = async (data) => {
-    const res = await api.loginLocal(data);
-
-    console.log(res);
-    if (res.data != null) {
-      navigate("/chat");
-    } else {
-      setErrorMsg(true);
-    }
+    await api.loginLocal(data);
+    console.log("local storage jwt token ");
+    console.log(localStorage.getItem("user"));
   };
 
   return (
@@ -122,6 +119,36 @@ function Login() {
                 </Link>
               </Grid>
             </Grid>
+            <Button
+              onClick={async () => {
+                const jwtToken = localStorage
+                  .getItem("user")
+                  .replace(/['"]+/g, "");
+                console.log(jwtToken);
+
+                await axios
+                  .post("http://localhost:5000/getuser", { token: jwtToken })
+                  .then((res) => {
+                    console.log(res);
+                  });
+              }}
+            >
+              Get user
+            </Button>
+            <Button
+              onClick={() => {
+                const jwtToken = localStorage
+                  .getItem("user")
+                  .replace(/['"]+/g, "");
+                console.log(jwtToken);
+
+                const socket = io("http://localhost:5000", {
+                  query: `token=${jwtToken}`,
+                });
+              }}
+            >
+              socket btn
+            </Button>
           </Box>
         </Box>
       </Container>
