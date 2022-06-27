@@ -31,9 +31,10 @@ const login = (req, res, next) => {
     if (err) throw err;
     if (!user) res.send("User does not exists");
     else {
-      let token = jwt.sign({ user_id: user.user_id }, "mysecret");
-      console.log(jwt.verify(token, "mysecret"));
-      console.log(token);
+      let token = jwt.sign(
+        { user_id: user.user_id, username: username },
+        "mysecret"
+      );
       res.json(token);
     }
   })(req, res, next);

@@ -65,6 +65,8 @@ io.use(
   })
 );
 
+//  Socket get user token (decoded_token) shows stuff about the token
+
 // TODO: Move socket io to another file
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
@@ -73,8 +75,8 @@ io.on("connection", (socket) => {
     console.log("User disconnected");
   });
 
-  socket.on("whoami", (cb) => {
-    console.log("whoami being called");
+  socket.on("add_friend", (friendName, cb) => {
+    console.log(friendName);
   });
 });
 

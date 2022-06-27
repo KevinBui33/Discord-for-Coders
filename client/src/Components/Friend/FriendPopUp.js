@@ -16,12 +16,14 @@ import { SocketContext } from "../../Context/SocketProvider";
 function FriendPopUp({ trigger, setTrigger }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState({});
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorState, setErrorState] = useState(false);
   const socket = useContext(SocketContext);
 
   let statusComp;
 
   const addFriend = async (data) => {
+    if (search === "") setErrorState(true);
+
     console.log(`Sending friend request to ${search}`);
     await socket.emit("add_friend", search, ({ err, done }) => {
       // Display if friend request worked
@@ -51,7 +53,12 @@ function FriendPopUp({ trigger, setTrigger }) {
       <div className="popup-inner">
         <div className="close-btn">
           <Typography variant="h5">Add a Friend</Typography>
-          <IconButton onClick={() => setTrigger(false)}>
+          <IconButton
+            onClick={() => {
+              setTrigger(false);
+              statusComp = <div></div>;
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </div>
@@ -65,14 +72,16 @@ function FriendPopUp({ trigger, setTrigger }) {
           {statusComp}
           <TextField
             fullWidth
-            error={search === ""}
-            helperText={search === "" ? "Please Enter a username" : ""}
+            error={errorState}
+            helperText={errorState ? "Please Enter a username" : ""}
             id="friend-username"
             label="Add a friend"
             name="friend-username"
             autoComplete="friend-username"
             onChange={(e) => {
               setSearch(e.target.value);
+              if (search !== "") setErrorState(false);
+              statusComp = <></>;
             }}
           />
           <Box
