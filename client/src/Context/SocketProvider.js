@@ -8,7 +8,9 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     const ENDPOINT = "http://localhost:5000";
-    const newSocket = io(ENDPOINT);
+    const newSocket = io(ENDPOINT, {
+      query: `token=${localStorage.getItem("user")}`,
+    });
     setSocket(newSocket);
     console.log("New client socket created");
   }, []);

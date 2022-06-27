@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 const db = require("../db/db");
 
 const register = async (req, res) => {
@@ -26,14 +27,14 @@ const register = async (req, res) => {
 
 const login = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
+    console.log("authenigcating user with passport");
     if (err) throw err;
     if (!user) res.send("User does not exists");
     else {
-      req.logIn(user, (err) => {
-        if (err) throw err;
-        res.send("sucessful authenticated");
-        console.log(req.user);
-      });
+      let token = jwt.sign({ user_id: user.user_id }, "mysecret");
+      console.log(jwt.verify(token, "mysecret"));
+      console.log(token);
+      res.json(token);
     }
   })(req, res, next);
 };

@@ -16,6 +16,7 @@ import { SocketContext } from "../../Context/SocketProvider";
 function FriendPopUp({ trigger, setTrigger }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState({});
+  const [errorMsg, setErrorMsg] = useState("");
   const socket = useContext(SocketContext);
 
   let statusComp;
