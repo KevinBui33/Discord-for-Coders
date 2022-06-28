@@ -29,13 +29,15 @@ module.exports.addFriend = async (socket, friendName, cb) => {
     if (isFriend.rows[0].exists)
       cb({ done: false, err: "Already friends with them" });
 
-    // Add user to friends table
-    await db.query("INSERT INTO friends(user_a, user_b) VALUES($1, $2)", [
-      currentUser.user_id,
-      addUser.user_id,
-    ]);
+    // Add user to friends table (change this so that it sends a request instead of directly adding it)
+    // await db.query("INSERT INTO friends(user_a, user_b) VALUES($1, $2)", [
+    //   currentUser.user_id,
+    //   addUser.user_id,
+    // ]);
 
-    cb({ done: true });
+    // cb({ done: true });
+
+    //
   } catch (err) {
     console.log(err);
     cb({ done: false, err: err });
