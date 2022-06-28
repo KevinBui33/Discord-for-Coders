@@ -9,7 +9,6 @@ import SendIcon from "@mui/icons-material/Send";
 import React, { useContext, useEffect, useState } from "react";
 import ChatWindow from "./ChatWindow";
 import Header from "../Header";
-import SideBar from "../SideBar/SideBar";
 import * as api from "../../Api/api";
 import { SocketContext } from "../../Context/SocketProvider";
 
@@ -24,7 +23,6 @@ function Chat() {
     <div className="App">
       <Header />
       <div className="ChatBox">
-        <SideBar />
         <div className="chat">
           <ChatWindow />
           <FormControl fullWidth>

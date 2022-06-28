@@ -29,13 +29,16 @@ const login = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     console.log("authenigcating user with passport");
     if (err) throw err;
-    if (!user) res.send("User does not exists");
-    else {
+    if (!user) {
+      res.status(401);
+      res.end(info.message);
+    } else {
       console.log(user);
       let token = jwt.sign(
         { user_id: user.user_id, username: user.username },
         "mysecret"
       );
+      console.log(token)
       res.json(token);
     }
   })(req, res, next);

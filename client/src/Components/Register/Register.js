@@ -13,16 +13,13 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as api from "../../Api/api";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 // TODO: Handle error messages
 
 const theme = createTheme();
 
-function Register() {
-  const navigate = useNavigate();
-
+function Register({ setIsRegistering }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -35,10 +32,6 @@ function Register() {
     });
 
     console.log(newAcc);
-
-    if (newAcc.data != null) {
-      navigate("/login");
-    }
   };
 
   return (
@@ -109,7 +102,14 @@ function Register() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2">
+                <Link
+                  href="/"
+                  variant="body2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsRegistering(false);
+                  }}
+                >
                   Already have an account? Sign in
                 </Link>
               </Grid>

@@ -16,30 +16,26 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as api from "../../Api/api";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 // TODO: Make error message disappear when inputting text field
 // TODO: Display dynamic errors from the server
 const theme = createTheme();
 
-function Login() {
-  const navigate = useNavigate();
+function Login({ setToken, setIsRegistering }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const [errorMsg, setErrorMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const login = async (data) => {
     const res = await api.loginLocal(data);
     console.log(res);
     if (res.data) {
-      console.log(res.data);
-      localStorage.setItem("user", res.data);
-      navigate("/chat");
+      setToken(res.data);
     } else {
       setErrorMsg(res.error);
     }
@@ -81,6 +77,9 @@ function Login() {
               {...register("email", { required: "Email is required" })}
               error={Boolean(errors.email) || errorMsg}
               helperText={errors.email?.message}
+              onChange={() => {
+                setErrorMsg("");
+              }}
             />
             <TextField
               margin="normal"
@@ -94,16 +93,15 @@ function Login() {
               {...register("password", { required: "Password is required" })}
               error={Boolean(errors.password) || errorMsg}
               helperText={errors.password?.message}
+              onChange={() => {
+                setErrorMsg("");
+              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            {errorMsg && (
-              <Typography color="error.main">
-                Login Credentials are not valid
-              </Typography>
-            )}
+            {errorMsg && <Typography color="error.main">{errorMsg}</Typography>}
             <Button
               type="submit"
               fullWidth
@@ -119,7 +117,14 @@ function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/register" variant="body2">
+                <Link
+                  href="/"
+                  variant="body2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsRegistering(true);
+                  }}
+                >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

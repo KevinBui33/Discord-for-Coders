@@ -6,7 +6,7 @@ export async function resolve(promise) {
 
   await promise
     .then((res) => (resolved.data = res.data))
-    .catch((err) => (resolved.error = err));
+    .catch((err) => (resolved.error = err.response.data));
 
   return resolved;
 }

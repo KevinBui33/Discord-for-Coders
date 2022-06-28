@@ -1,41 +1,22 @@
 import "../../Styles/SideBar.css";
-import React, { useState } from "react";
-import FriendPopUp from "../Friend/FriendPopUp";
-
-// TODO: Have the ability to add friends
+import React from "react";
+import { SideBarList } from "./SideBarLinks";
+import { Link } from "react-router-dom";
 
 function SideBar() {
-  const [showPopUp, setShowPopUp] = useState(false);
-
   return (
-    <div className="sidebar">
-      <ul className="sidebarList">
-        <li className="row">
-          <div id="title">Overview</div>
-        </li>
-        <li className="row">
-          <div id="title">Channels</div>
-        </li>
-        <li className="row">
-          <div id="title">Ranodm</div>
-        </li>
-        <li className="row">
-          <div id="title">Ov</div>
-        </li>
-        <li className="row">
-          <div id="title">Overview</div>
-        </li>
-        <li className="row">
-          <div id="title" onClick={() => setShowPopUp(true)}>
-            Add Friend
-          </div>
-          <FriendPopUp trigger={showPopUp} setTrigger={setShowPopUp} />
-        </li>
-        <li>
-          <div id="title">Friends</div>
-        </li>
+    <nav className="nav-menu">
+      <ul className="nav-menu-items">
+        {SideBarList.map((item, index) => (
+          <li key={index} className="nav-text">
+            <Link to={item.path}>
+              {item.icon}
+              <span>{item.title}</span>
+            </Link>
+          </li>
+        ))}
       </ul>
-    </div>
+    </nav>
   );
 }
 

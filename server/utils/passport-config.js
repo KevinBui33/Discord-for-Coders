@@ -12,15 +12,31 @@ module.exports = (passport) => {
           .query("SELECT * FROM accounts WHERE email = $1", [email])
           .then(async (res) => {
             const user = res.rows[0];
-            if (await bcrypt.compare(password, user.password)) {
-              console.log("authentication OK");
-              return done(null, user);
-            } else {
-              console.log("wrong credentials");
-              return done(null, false, { message: "Incorrect password" });
-            }
+
+            if (user === null)
+              done(null, false, { message: "User does not exists" });
+
+            console.log(password);
+
+            await bcrypt
+              .compare(password, user.password)
+              .then((res) => {
+                if (res) {
+                  console.log("authentication OK");
+                  return done(null, user);
+                }
+                console.log("wrong credentials");
+                return done(null, false, { message: "Incorrect password" });
+              })
+              .catch((err) => {
+                console.log("An error occured when comparing passwords");
+                console.log(err);
+                done(null, false, { message: new Error("bcrypt error") });
+              });
           })
-          .catch((err) => done(err));
+          .catch((err) =>
+            done(null, false, { message: "User does not exits" })
+          );
       }
     )
   );
