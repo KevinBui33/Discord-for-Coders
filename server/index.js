@@ -70,14 +70,15 @@ io.use(
 // TODO: Move socket io to another file
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
+  console.log(`user id: ${socket.decoded_token.user_id}`);
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
 
-  socket.on("add_friend", (friendName, cb) => {
-    console.log(friendName);
-  });
+  socket.on("add_friend", (friendName, cb) =>
+    addFriend(socket, friendName, cb)
+  );
 });
 
 server.listen(PORT, () => console.log(`server listening on port: ${PORT}`));

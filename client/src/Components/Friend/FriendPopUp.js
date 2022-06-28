@@ -29,6 +29,11 @@ function FriendPopUp({ trigger, setTrigger }) {
       // Display if friend request worked
       if (err) {
         setStatus({ stat: "error", msg: err });
+        return;
+      }
+
+      if (done) {
+        setTrigger(false);
       }
     });
     console.log(status);

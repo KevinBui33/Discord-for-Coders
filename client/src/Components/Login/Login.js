@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 // TODO: Make error message disappear when inputting text field
+// TODO: Display dynamic errors from the server
 const theme = createTheme();
 
 function Login() {

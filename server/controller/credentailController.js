@@ -31,8 +31,9 @@ const login = (req, res, next) => {
     if (err) throw err;
     if (!user) res.send("User does not exists");
     else {
+      console.log(user);
       let token = jwt.sign(
-        { user_id: user.user_id, username: username },
+        { user_id: user.user_id, username: user.username },
         "mysecret"
       );
       res.json(token);
@@ -41,6 +42,7 @@ const login = (req, res, next) => {
 };
 
 const checkAuth = (req, res, next) => {
+  console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
     next();
   }
