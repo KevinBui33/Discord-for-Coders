@@ -9,10 +9,9 @@ import SendIcon from "@mui/icons-material/Send";
 import React, { useContext, useEffect, useState } from "react";
 import ChatWindow from "./ChatWindow";
 import Header from "../Header";
-import SideBar from "../SideBar";
+import SideBar from "../SideBar/SideBar";
 import * as api from "../../Api/api";
-import { SocketContext, SocketProvider } from "../../Context/SocketProvider";
-import axios from "axios";
+import { SocketContext } from "../../Context/SocketProvider";
 
 // TODO: Can send message to friends
 // TODO: Display the messages to both parties

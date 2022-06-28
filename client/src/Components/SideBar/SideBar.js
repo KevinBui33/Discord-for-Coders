@@ -1,6 +1,6 @@
-import "../Styles/SideBar.css";
+import "../../Styles/SideBar.css";
 import React, { useState } from "react";
-import FriendPopUp from "./Friend/FriendPopUp";
+import FriendPopUp from "../Friend/FriendPopUp";
 
 // TODO: Have the ability to add friends
 
@@ -30,6 +30,9 @@ function SideBar() {
             Add Friend
           </div>
           <FriendPopUp trigger={showPopUp} setTrigger={setShowPopUp} />
+        </li>
+        <li>
+          <div id="title">Friends</div>
         </li>
       </ul>
     </div>
