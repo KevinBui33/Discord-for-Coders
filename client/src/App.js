@@ -8,6 +8,7 @@ import Friends from "./Components/Friend/Friends";
 import SideBar from "./Components/SideBar/SideBar";
 import useToken from "./Utils/useToken";
 import { useState } from "react";
+import AppLayout from "./AppLayout";
 
 // TODO: Make sidebar on every page besides the login/register pages
 
@@ -24,22 +25,22 @@ function App() {
   }
 
   return (
-    <div>
-      <BrowserRouter>
-        <SideBar />
-        <Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
           <Route path="/friends" element={<Friends />} />
           <Route
-            path="/"
+            index
+            path="/chat"
             element={
               <SocketProvider>
                 <Chat />
               </SocketProvider>
             }
           />
-        </Routes>
-      </BrowserRouter>
-    </div>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

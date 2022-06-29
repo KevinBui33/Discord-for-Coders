@@ -17,9 +17,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as api from "../../Api/api";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 // TODO: Make error message disappear when inputting text field
-// TODO: Display dynamic errors from the server
 const theme = createTheme();
 
 function Login({ setToken, setIsRegistering }) {
