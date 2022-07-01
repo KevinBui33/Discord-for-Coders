@@ -1,0 +1,29 @@
+.content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.content-friend {
+  display: flex;
+}
+
+.content-friend-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+}
+
+.content-friend-buttons li a {
+  margin: 0px 10px;
+  text-decoration: none;
+  color: black;
+  padding: 5px 20px;
+  border-radius: 0.5rem;
+}
+
+.content-friend-buttons li a:hover {
+  background-color: #424549;
+  color: white;
+}

@@ -25,18 +25,14 @@ function FriendPopUp({ trigger, setTrigger }) {
     if (search === "") setErrorState(true);
 
     console.log(`Sending friend request to ${search}`);
-    await socket.emit("add_friend", search, ({ err, done }) => {
-      // Display if friend request worked
-      if (err) {
-        setStatus({ stat: "error", msg: err });
-        return;
-      }
 
-      if (done) {
-        setTrigger(false);
-      }
-    });
-    console.log(status);
+    // Send friend request to another user VIA api (not socket io)
+    // close tab on sucess
+
+    await api
+      .addFriend({})
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   if (status.stat == "error") {
@@ -56,6 +52,7 @@ function FriendPopUp({ trigger, setTrigger }) {
   return trigger ? (
     <div className="popup">
       <div className="popup-inner">
+        ``
         <div className="close-btn">
           <Typography variant="h5">Add a Friend</Typography>
           <IconButton

@@ -9,7 +9,7 @@ export const SideBarList = [
   },
   {
     title: "Friends",
-    path: "/chat",
+    path: "/friends",
     icon: <GroupIcon />,
   },
 ];

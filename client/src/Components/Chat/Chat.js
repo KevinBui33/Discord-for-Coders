@@ -21,7 +21,6 @@ function Chat() {
 
   return (
     <div className="App">
-      <Header />
       <div className="ChatBox">
         <div className="chat">
           <ChatWindow />
@@ -30,16 +29,13 @@ function Chat() {
               id="outlined-adornment-weight"
               onChange={(e) => {
                 setMsg(e.target.value);
-                console.log(msg);
               }}
               placeholder="Enter Text"
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     onClick={async () => {
-                      await socket.emit("whoami", (err, msg) => {
-                        console.log(err, msg);
-                      });
+                      console.log("sending msg");
                     }}
                   >
                     <SendIcon />

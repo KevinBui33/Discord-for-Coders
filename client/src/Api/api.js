@@ -20,3 +20,7 @@ export const loginLocal = async (data) => {
 export const getUsers = async (data) => {
   return resolve(axios.get(baseURL + "/users", { params: data }));
 };
+
+export const addFriend = async (data) => {
+  return resolve(axios.post(baseURL + "/friend"), { params: data });
+};
