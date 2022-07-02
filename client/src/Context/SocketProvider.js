@@ -11,8 +11,14 @@ export const SocketProvider = ({ children }) => {
     const newSocket = io(ENDPOINT, {
       query: `token=${localStorage.getItem("user")}`,
     });
+
     setSocket(newSocket);
-    console.log("New client socket created");
+    console.log("created socket connection");
+
+    newSocket.on("connect", () => {
+      console.log(newSocket.id);
+      newSocket.emit("storeClientInfo");
+    });
   }, []);
 
   return (

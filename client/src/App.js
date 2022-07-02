@@ -25,22 +25,16 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AppLayout />}>
-          <Route path="/friends" element={<Friends />} />
-          <Route
-            index
-            path="/chat"
-            element={
-              <SocketProvider>
-                <Chat />
-              </SocketProvider>
-            }
-          />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <SocketProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+            <Route path="/friends" element={<Friends />} />
+            <Route index path="/chat" element={<Chat />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </SocketProvider>
   );
 }
 

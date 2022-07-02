@@ -1,5 +1,5 @@
 const express = require("express");
-const db = require("../../db/db");
+const db = require("../db/db");
 const router = express.Router();
 
 // Getting all users based off name
