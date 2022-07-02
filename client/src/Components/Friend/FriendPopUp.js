@@ -52,7 +52,6 @@ function FriendPopUp({ trigger, setTrigger }) {
   return trigger ? (
     <div className="popup">
       <div className="popup-inner">
-        ``
         <div className="close-btn">
           <Typography variant="h5">Add a Friend</Typography>
           <IconButton
