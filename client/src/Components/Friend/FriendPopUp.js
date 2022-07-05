@@ -22,17 +22,13 @@ function FriendPopUp({ trigger, setTrigger }) {
   let statusComp;
 
   const addFriend = async (data) => {
-    if (search === "") setErrorState(true);
+    if (search === "") return setErrorState(true);
 
     console.log(`Sending friend request to ${search}`);
 
     // Send friend request to another user VIA api (not socket io)
     // close tab on sucess
-
-    await api
-      .addFriend({})
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+    socket.emit("send_friend_request", search);
   };
 
   if (status.stat == "error") {

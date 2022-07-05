@@ -21,6 +21,6 @@ export const getUsers = async (data) => {
   return resolve(axios.get(baseURL + "/users", { params: data }));
 };
 
-export const addFriend = async (data) => {
-  return resolve(axios.post(baseURL + "/friend"), { params: data });
+export const addFriend = async (data, token) => {
+  return resolve(axios.post(baseURL + "/friend", data, { params: { token } }));
 };

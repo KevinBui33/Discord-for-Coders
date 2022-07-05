@@ -18,6 +18,8 @@ const server = require("http").createServer(app);
 const credRoute = require("./routes/credentailsRoute");
 const userRoute = require("./routes/userRoute");
 
+const socketController = require("./controller/socketController");
+
 const { pool } = require("./db/db");
 
 const io = new Server(server, {
@@ -65,32 +67,7 @@ io.use(
 );
 
 //  Socket get user token (decoded_token) shows stuff about the token
-
 const linkedUsers = [];
-
-// TODO: Move socket io to another file
-// TODO: Link socket id to the user
-io.on("connection", (socket) => {
-  console.log(`user connected: ${socket.id}`);
-  console.log(`user id: ${socket.decoded_token.user_id}`);
-
-  socket.on("storeClientInfo", () => {
-    const user = {
-      clientId: socket.id,
-      userId: socket.decoded_token.user_id,
-    };
-
-    linkedUsers.push(user);
-    console.log(linkedUsers);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-  });
-
-  socket.on("add_friend", (friendName, cb) =>
-    addFriend(socket, friendName, cb)
-  );
-});
+io.on("connection", (socket) => socketController(io, socket, linkedUsers));
 
 server.listen(PORT, () => console.log(`server listening on port: ${PORT}`));
