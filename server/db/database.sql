@@ -6,22 +6,30 @@ create table accounts (
     created_on timestamp default now()
 );
 
-insert into accounts (username, password, email) values ('kbui', 'somepass', 'kbui@gmail.com');
-insert into accounts (username, password, email) values ('timmyQ', 'no pass', 'kbui@gmail.com');
-insert into accounts (username, password, email) values ('guy', 'yes sir', 'kbui@gmail.com');
-
-create table friends(
-    friends_id serial primary key, 
-    created_on timestamp default now(), 
+create table friendship(
+    id serial primary key,
     user_a integer not null references accounts,
-    user_b integer not null references accounts 
+    user_b integer not null references accounts ,
+    created_on timestamp default now(), 
+    status integer not null
 );
 
-create table friendRequests(
-    id serial primary key,
-    user_from integer not null references accounts,
-    user_to integer not null references accounts ,
+-- status: 0 (pending), 1 (friends), 2(blocked), deleted is rejected  
+
+create table notification (
+    id integer primary key generated always as identity, 
     created_on timestamp default now(), 
-    status varchar (255)
-    
-)
+    notification_type_id integer not null references notification_type(id),
+    sender_id integer not null references accounts, 
+    recipient_id integer not null references accounts 
+);
+
+create table notification_type(
+    id integer primary key generated always as identity, 
+    name varchar(255) not null, 
+    description varchar(255) not null
+);
+
+insert into notification_type(name, description) values('friend_request', 'A user wants to be friends with another user'); 
+insert into notification_type(name, description) values('message', 'Someone has sent a message'); 
+

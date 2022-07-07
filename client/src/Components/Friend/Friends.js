@@ -1,42 +1,26 @@
 import "./Friend.css";
-import { Avatar, Grid, TextField, Typography, Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
-import Paper from "@mui/material/Paper";
+import { TextField, Typography, Button } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import GroupIcon from "@mui/icons-material/Group";
 import FriendPopUp from "./FriendPopUp";
-
-const friends = [
-  {
-    user_idL: 1,
-    username: "ppppp",
-  },
-  {
-    user_idL: 2,
-    username: "qqqq",
-  },
-  {
-    user_idL: 3,
-    username: "aaaa",
-  },
-];
+import { SocketContext } from "../../Context/SocketProvider";
+import FriendListItem from "./FriendListItem";
 
 const contentButtons = ["Online", "All", "Pending"];
 
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#424549",
-  color: "#fff",
-}));
-
 const Friends = () => {
   const [search, setSearch] = useState("");
-  const [friendsList, setFriendsList] = useState([]);
+  const [usersList, setUsersList] = useState([]);
   const [showPopUp, setShowPopUp] = useState(false);
+  const socket = useContext(SocketContext);
 
+  // TODO: Put some red dot for notification
   useEffect(() => {
-    setFriendsList(friends);
-  }, []);
+    socket.on("get_friend_request", (data) => {
+      console.log(data);
+    });
+  }, [socket]);
 
   return (
     <div style={{ padding: "50px" }}>
@@ -46,15 +30,18 @@ const Friends = () => {
         <div className="content-friend">
           <ul className="content-friend-buttons">
             {contentButtons.map((item, index) => (
-              <li key={index} className="conetent-friend-button">
+              <li key={index} className="content-friend-button">
                 <a
                   href=""
                   onClick={(e) => {
                     e.preventDefault();
+
+                    // TODO: set the usersList by api call
                   }}
                 >
                   {item}
                 </a>
+                <span className="content-friend-badge" />
               </li>
             ))}
           </ul>
@@ -84,24 +71,8 @@ const Friends = () => {
         }}
       />
       <Box>
-        {friendsList.map((item, index) => (
-          <StyledPaper
-            sx={{
-              my: 1,
-              mx: "auto",
-              p: 2,
-            }}
-            key={index}
-          >
-            <Grid container spacing={2}>
-              <Grid item>
-                <Avatar>{item.username.charAt(0)}</Avatar>
-              </Grid>
-              <Grid item>
-                <Typography>{item.username}</Typography>
-              </Grid>
-            </Grid>
-          </StyledPaper>
+        {usersList.map((item, index) => (
+          <FriendListItem item={item} index={index} />
         ))}
       </Box>
     </div>

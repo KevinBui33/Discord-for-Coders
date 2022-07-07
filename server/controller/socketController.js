@@ -5,14 +5,17 @@ module.exports = (io, socket, linkedUsers) => {
   console.log(`user id: ${socket.decoded_token.user_id}`);
 
   const disconnectUser = () => {
+    // Find user disconnecting user
     const userId = linkedUsers.find((x) => x.clientId === socket.id);
     console.log(userId);
 
+    // Remove user from list
     linkedUsers = linkedUsers.filter((item) => item.userId !== userId.userId);
     console.log(`User ${userId.userId} has dissconnected`);
   };
 
   const storeClientInfo = () => {
+    // Create user object that linking socket id with user id
     const user = {
       clientId: socket.id,
       userId: socket.decoded_token.user_id,
@@ -29,7 +32,7 @@ module.exports = (io, socket, linkedUsers) => {
 
     // Check if user are not adding themself
     if (fromUser.username === friendName)
-      cb({ done: false, err: "Cannot add yourself" });
+      return cb({ done: false, err: "Cannot add yourself" });
 
     let res;
 
@@ -43,39 +46,52 @@ module.exports = (io, socket, linkedUsers) => {
 
     if (toUser === null) cb({ done: false, err: "User does not exsits" });
 
-    // Check if friend is not already a friend
+    // Check if user is not already a friend
     res = await db.query(
-      "SELECT EXISTS (SELECT 1 FROM friends WHERE user_a = $1 AND user_b = $2)",
+      "SELECT EXISTS (SELECT 1 FROM friendship WHERE user_a = $1 AND user_b = $2 AND status = 1)",
       [fromUser.user_id, toUser.user_id]
     );
 
     if (res.rows[0].exists)
-      cb({ done: false, err: "Already friends with this person" });
+      return cb({ done: false, err: "Already friends with this person" });
 
     // Check if there is already a friend request
     res = await db.query(
-      "SELECT EXISTS (SELECT 1 FROM friendrequests WHERE user_from = $1 AND user_to = $2)",
-      []
+      "SELECT EXISTS (SELECT 1 FROM friendship WHERE user_a = $1 AND user_b = $2 AND status = 0)",
+      [fromUser.user_id, toUser.user_id]
     );
+
+    if (res.rows[0].exists)
+      return cb({ done: false, err: "Friend request already sent" });
 
     // Add friend to request table
     await db.query(
-      "INSERT INTO friendrequests(user_from, user_to, status) VALUES($1, $2, $3);",
-      [fromUser.user_id, toUser.user_id, "pending"]
+      "INSERT INTO friendship(user_a, user_b, status) VALUES($1, $2, $3);",
+      [fromUser.user_id, toUser.user_id, 0]
     );
 
-    // Send notification (socket)/ save to notification DB
-
-    const fromUserClientId = linkedUsers.find(
-      (x) => x.userId === fromUser.user_id
+    // Save notification
+    await db.query(
+      "INSERT INTO notification(notification_type_id, sender_id, recipient_id) values($1, $2, $3)",
+      [1, fromUser.user_id, toUser.user_id]
     );
 
-    console.log(fromUserClientId);
+    // Send notifcation to user
+    const toUserClientId = linkedUsers.find((x) => x.userId === toUser.user_id);
 
-    // io.to();
+    console.log(toUserClientId);
+
+    io.to(toUserClientId.clientId).emit("get_friend_request", {
+      senderName: fromUser,
+    });
+
+    cb({ done: true });
   };
+
+  const sendMessage = () => {};
 
   socket.on("store_client_info", storeClientInfo);
   socket.on("send_friend_request", sendFriendRequst);
+  socket.on("send_msg", sendMessage);
   socket.on("disconnect", disconnectUser);
 };

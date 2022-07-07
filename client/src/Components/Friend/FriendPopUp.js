@@ -28,7 +28,15 @@ function FriendPopUp({ trigger, setTrigger }) {
 
     // Send friend request to another user VIA api (not socket io)
     // close tab on sucess
-    socket.emit("send_friend_request", search);
+    socket.emit("send_friend_request", search, (response) => {
+      console.log(response);
+
+      if (response.done) {
+        setStatus({ stat: "sucess" });
+      } else {
+        setStatus({ stat: "error", msg: response.err });
+      }
+    });
   };
 
   if (status.stat == "error") {
@@ -78,7 +86,7 @@ function FriendPopUp({ trigger, setTrigger }) {
             onChange={(e) => {
               setSearch(e.target.value);
               if (search !== "") setErrorState(false);
-              statusComp = <></>;
+              setStatus({});
             }}
           />
           <Box

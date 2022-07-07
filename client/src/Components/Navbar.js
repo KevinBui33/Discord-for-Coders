@@ -3,7 +3,7 @@ import { AppBar, Box, Button, Container, Menu, Toolbar } from "@mui/material";
 
 // TODO: Show the clicked person (who they are looking at rn) on the bar
 
-function Header() {
+function NavBar() {
   return (
     <AppBar position="static">
       <Container>
@@ -15,4 +15,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default NavBar;
