@@ -1,0 +1,74 @@
+.friend-navbar {
+  height: 80px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.navbar-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  justify-self: start;
+  cursor: default;
+}
+
+.navbar-menu {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-gap: 10px;
+  list-style: none;
+  text-align: center;
+  justify-content: start;
+  margin-right: 2rem;
+}
+
+.navbar-item {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.navbar-links {
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  color: inherit;
+}
+
+.navbar-item:hover {
+  background-color: #7289da;
+  color: white;
+  border-radius: 4px;
+  transition: all 0.2s ease-out;
+}
+
+.btn {
+  justify-self: start;
+  background-color: rgb(0, 165, 0);
+  padding: 8px 20px;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-medium {
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-size: 18px;
+  color: #fff;
+}
+
+.btn-notif {
+  margin: 7px 7px 7px 0px;
+  height: 25px;
+  width: 25px;
+  background-color: red;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  justify-content: center;
+}

@@ -12,6 +12,8 @@ import AppLayout from "./AppLayout";
 
 // TODO: Make sidebar on every page besides the login/register pages
 
+// Discord colors https://www.color-hex.com/color-palette/28549
+
 function App() {
   const { token, setToken } = useToken();
   const [isRegistering, setIsRegistering] = useState(false);
