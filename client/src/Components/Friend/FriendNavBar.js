@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import GroupIcon from "@mui/icons-material/Group";
+import FriendPopUp from "./FriendPopUp";
 import "./FriendNavBar.css";
 
 const MenuItems = ["Online", "All", "Pending"];
@@ -28,7 +29,13 @@ const FriendNavBar = ({ navOptionClick, notificationDot }) => {
           </li>
         ))}
       </ul>
-      <button className="btn btn-primary btn-medium">Add Friend</button>
+      <button
+        className="btn btn-primary btn-medium"
+        onClick={() => setShowPopUp(true)}
+      >
+        Add Friend
+      </button>
+      <FriendPopUp trigger={showPopUp} setTrigger={setShowPopUp} />
     </nav>
   );
 };

@@ -81,9 +81,11 @@ module.exports = (io, socket, linkedUsers) => {
 
     console.log(toUserClientId);
 
-    io.to(toUserClientId.clientId).emit("get_friend_request", {
-      senderName: fromUser,
-    });
+    if (toUserClientId) {
+      io.to(toUserClientId.clientId).emit("get_friend_request", {
+        senderName: fromUser,
+      });
+    }
 
     cb({ done: true });
   };

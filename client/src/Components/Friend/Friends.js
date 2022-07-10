@@ -5,8 +5,8 @@ import { Box } from "@mui/system";
 import { SocketContext } from "../../Context/SocketProvider";
 import FriendListItem from "./FriendListItem";
 import FriendNavBar from "./FriendNavBar";
-
-const contentButtons = ["Online", "All", "Pending"];
+import FriendPopUp from "./FriendPopUp";
+import * as api from "../../Api/api";
 
 const Friends = () => {
   const [search, setSearch] = useState("");
@@ -14,7 +14,7 @@ const Friends = () => {
   const [notification, setNotification] = useState(false);
   const socket = useContext(SocketContext);
 
-  // TODO: Put some red dot for notification
+  // Get friend request from server only when user is online
   useEffect(() => {
     socket.on("get_friend_request", (res) => {
       console.log(res);
@@ -26,14 +26,13 @@ const Friends = () => {
     });
   }, [socket]);
 
-  const navOptionClick = (item, event) => {
+  const navOptionClick = async (item, event) => {
     event.preventDefault();
     console.log(item);
 
     // TODO: get users based off nav menu item clicked
+    await api.getFriendship(item.toLowerCase());
   };
-
-  // TODO: Make notification dot show amount of friend request
 
   return (
     <div style={{ padding: "50px" }}>

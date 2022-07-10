@@ -24,3 +24,7 @@ export const getUsers = async (data) => {
 export const addFriend = async (data, token) => {
   return resolve(axios.post(baseURL + "/friend", data, { params: { token } }));
 };
+
+export const getFriendship = async (data) => {
+  return resolve(axios.get(baseURL + "/friend", { params: { type: data } }));
+};
