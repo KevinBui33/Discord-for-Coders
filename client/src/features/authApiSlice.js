@@ -2,6 +2,7 @@ const { apiSlice } = require("../api/apiSlice");
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    // Login in endpoint
     login: builder.mutation({
       query: (credential) => ({
         url: "/auth",
@@ -11,3 +12,5 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
   }),
 });
+
+export const { useLoginMutation } = authApiSlice;

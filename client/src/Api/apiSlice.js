@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { logout, login } from "../features/authSlice";
+import { login, logout } from "../features/authSlice";
 const baseURL = "http://localhost:5000";
 
 // For every request, set bearer token with current token
