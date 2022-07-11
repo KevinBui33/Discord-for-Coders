@@ -4,12 +4,12 @@ import GroupIcon from "@mui/icons-material/Group";
 export const SideBarList = [
   {
     title: "Home",
-    path: "/chat",
+    path: "/dashboard/chat",
     icon: <HomeIcon />,
   },
   {
     title: "Friends",
-    path: "/friends",
+    path: "/dashboard/friends",
     icon: <GroupIcon />,
   },
 ];

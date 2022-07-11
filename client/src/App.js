@@ -1,5 +1,11 @@
 import "./Styles/App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import Chat from "./Components/Chat/Chat";
@@ -7,32 +13,33 @@ import { SocketProvider } from "./Context/SocketProvider";
 import Friends from "./Components/Friend/Friends";
 import SideBar from "./Components/SideBar/SideBar";
 import useToken from "./Utils/useToken";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AppLayout from "./AppLayout";
-
-// TODO: Make sidebar on every page besides the login/register pages
+import RequireAuth from "./Components/Auth/RequireAuth";
+import Dashboard from "./Components/DashBoard/Dashboard";
 
 // Discord colors https://www.color-hex.com/color-palette/28549
 
 function App() {
-  const { token, setToken } = useToken();
-  const [isRegistering, setIsRegistering] = useState(false);
-  if (!token) {
-    console.log(isRegistering);
-    if (isRegistering) {
-      return <Register setIsRegistering={setIsRegistering} />;
-    } else {
-      return <Login setToken={setToken} setIsRegistering={setIsRegistering} />;
-    }
-  }
+  const { setToken } = useToken();
 
   return (
     <SocketProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AppLayout />}>
-            <Route path="/friends" element={<Friends />} />
-            <Route index path="/chat" element={<Chat />} />
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/login" element={<Login setToken={setToken} />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/dashboard"
+            element={
+              <RequireAuth>
+                <AppLayout />
+              </RequireAuth>
+            }
+          >
+            <Route path="friends" element={<Friends />} />
+            <Route path="chat" element={<Chat />} />
           </Route>
         </Routes>
       </BrowserRouter>

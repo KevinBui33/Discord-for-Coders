@@ -14,15 +14,17 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as api from "../../Api/api";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 // TODO: Handle error messages
+// TODO: Redirect to login + say that accout was made
 
 const theme = createTheme();
 
-function Register({ setIsRegistering }) {
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+function Register() {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
 
     const newAcc = await api.createAccount({
       username: data.get("username"),
@@ -102,14 +104,7 @@ function Register({ setIsRegistering }) {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link
-                  href="/"
-                  variant="body2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsRegistering(false);
-                  }}
-                >
+                <Link href="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

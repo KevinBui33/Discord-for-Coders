@@ -15,27 +15,35 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as api from "../../Api/api";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 // TODO: Make error message disappear when inputting text field
 const theme = createTheme();
 
-function Login({ setToken, setIsRegistering }) {
+function Login({ setToken }) {
+  const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const [errorMsg, setErrorMsg] = useState("");
+  // Redirect to dashboard if token in session storage
+  useEffect(() => {
+    if (sessionStorage.getItem("token")) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   const login = async (data) => {
     const res = await api.loginLocal(data);
     console.log(res);
     if (res.data) {
       setToken(res.data);
+      navigate("/dashboard");
     } else {
       setErrorMsg(res.error);
     }
@@ -117,14 +125,7 @@ function Login({ setToken, setIsRegistering }) {
                 </Link>
               </Grid>
               <Grid item>
-                <Link
-                  href="/"
-                  variant="body2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsRegistering(true);
-                  }}
-                >
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
