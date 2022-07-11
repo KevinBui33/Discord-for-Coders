@@ -21,11 +21,13 @@ router.get("/users", async (req, res) => {
 
 router.get("/friend", async (req, res) => {
   console.log(req.query);
-  const { type } = req.query;
+  const { type, token } = req.query;
+  const user = jwt.decode(token);
 
-  console.log(`Getting ${type} users`);
+  console.log(`Getting ${type} users for ${user.user_id}`);
 
-  let queryStr = "SELECT * FROM accounts WHERE ";
+  let queryStr = "";
+  let queryParams;
 
   switch (type) {
     case "online":
@@ -33,8 +35,36 @@ router.get("/friend", async (req, res) => {
     case "all":
       break;
     case "pending":
-      queryStr += "";
+      queryStr += "SELECT * FROM friendship WHERE user_b = $1 AND status = 0";
+      queryParams = [user.user_id];
       break;
+  }
+
+  try {
+    const friendRequests = (await db.query(queryStr, queryParams)).rows;
+
+    console.log("Ppl who sent you a friend request");
+    const requestsAccounts = await Promise.all(
+      friendRequests.map(async (f) => {
+        try {
+          console.log(f);
+          const friend = await db.query(
+            "SELECT * FROM accounts WHERE user_id = $1",
+            [f.user_a]
+          );
+
+          console.log(friend);
+          return friend.rows[0];
+        } catch (err) {
+          throw err;
+        }
+      })
+    );
+    console.log(requestsAccounts);
+    res.json({ requests: requestsAccounts });
+  } catch (err) {
+    // TODO: send error to client
+    console.log(err);
   }
 });
 

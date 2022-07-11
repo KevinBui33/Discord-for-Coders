@@ -10,25 +10,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const FriendListItem = ({ item, index }) => {
-  return (
-    <StyledPaper
-      sx={{
-        my: 1,
-        mx: "auto",
-        p: 2,
-      }}
-      key={index}
-    >
-      <Grid container spacing={2}>
-        <Grid item>
-          <Avatar>{item.username.charAt(0)}</Avatar>
-        </Grid>
-        <Grid item>
-          <Typography>{item.username}</Typography>
-        </Grid>
-      </Grid>
-    </StyledPaper>
-  );
+  return <div>{item.username}</div>;
 };
 
 export default FriendListItem;

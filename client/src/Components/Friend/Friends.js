@@ -1,11 +1,19 @@
 import "./Friend.css";
-import { TextField, Typography, Button } from "@mui/material";
+import {
+  Avatar,
+  TextField,
+  Typography,
+  Button,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+} from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { Box } from "@mui/system";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { SocketContext } from "../../Context/SocketProvider";
 import FriendListItem from "./FriendListItem";
 import FriendNavBar from "./FriendNavBar";
-import FriendPopUp from "./FriendPopUp";
 import * as api from "../../Api/api";
 
 const Friends = () => {
@@ -31,7 +39,14 @@ const Friends = () => {
     console.log(item);
 
     // TODO: get users based off nav menu item clicked
-    await api.getFriendship(item.toLowerCase());
+    await api
+      .getFriendship(item.toLowerCase(), sessionStorage.getItem("token"))
+      .then((res) => {
+        console.log(res);
+        if (res.data) {
+          setUsersList(res.data.requests);
+        }
+      });
   };
 
   return (
@@ -52,11 +67,21 @@ const Friends = () => {
           console.log(search);
         }}
       />
-      <Box>
-        {usersList.map((item, index) => (
-          <FriendListItem item={item} index={index} />
-        ))}
-      </Box>
+      <div className="user-list-container">
+        <List className="user-list">
+          <ListItem className="user-list-title">Active Users</ListItem>
+          {usersList.map((user, index) => (
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <AccountCircleIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText>{user.username}</ListItemText>
+            </ListItem>
+          ))}
+        </List>
+      </div>
     </div>
   );
 };
