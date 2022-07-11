@@ -14,7 +14,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { SocketContext } from "../../Context/SocketProvider";
 import FriendListItem from "./FriendListItem";
 import FriendNavBar from "./FriendNavBar";
-import * as api from "../../Api/api";
+import * as api from "../../api/api";
 
 const Friends = () => {
   const [search, setSearch] = useState("");

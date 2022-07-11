@@ -8,7 +8,6 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import React, { useContext, useEffect, useState } from "react";
 import ChatWindow from "./ChatWindow";
-import * as api from "../../Api/api";
 import { SocketContext } from "../../Context/SocketProvider";
 
 // TODO: Can send message to friends

@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useEffect, useState, useContext } from "react";
-import * as api from "../../Api/api";
 import "./FriendPopUp.css";
 import { SocketContext } from "../../Context/SocketProvider";
 
