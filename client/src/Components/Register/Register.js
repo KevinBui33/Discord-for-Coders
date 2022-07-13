@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -11,33 +12,39 @@ import {
   Link,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import * as api from "../../api/api";
-import React from "react";
-import { useForm } from "react-hook-form";
+import { useRegisterMutation } from "../../features/authApiSlice";
 import { useNavigate } from "react-router-dom";
 
 // TODO: Handle error messages
-// TODO: Redirect to login + say that accout was made
-
-const theme = createTheme();
+// TODO: say that accout was made (need snack bar)
 
 function Register() {
+  const navigate = useNavigate();
+  const [register, { isloading }] = useRegisterMutation();
+  const [errorMsg, setErrorMsg] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
+    const regInfo = Object.fromEntries(data);
 
-    const newAcc = await api.createAccount({
-      username: data.get("username"),
-      email: data.get("email"),
-      password: data.get("password"),
-      created_on: new Date(Date.now()).toISOString(),
-    });
-
-    console.log(newAcc);
+    console.log(regInfo);
+    await register(regInfo)
+      .unwrap()
+      .then((res) => {
+        console.log(res);
+        if (res) {
+          navigate("/login");
+        }
+      })
+      .catch((err) => {
+        console.log("An error occured in registering");
+        console.log(err);
+      });
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={createTheme()}>
       <Container component="main" maxWidth="xs">
         <Box
           sx={{

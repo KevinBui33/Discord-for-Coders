@@ -1,0 +1,9 @@
+.dashboard {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+}

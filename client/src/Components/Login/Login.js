@@ -14,39 +14,57 @@ import {
   Link,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import * as api from "../../api/api";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setCredentials } from "../../features/authSlice";
+import { useLoginMutation } from "../../features/authApiSlice";
 
 // TODO: Make error message disappear when inputting text field
 const theme = createTheme();
 
-function Login({ setToken }) {
+function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [userLogin, { isLoading }] = useLoginMutation();
+  const [email, setEmail] = useState("");
+  const [pwd, setPwd] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
 
   // Redirect to dashboard if token in session storage
   useEffect(() => {
-    if (sessionStorage.getItem("token")) {
+    if (localStorage.getItem("token")) {
       navigate("/dashboard");
     }
   }, []);
 
-  const login = async (data) => {
-    const res = await api.loginLocal(data);
-    console.log(res);
-    if (res.data) {
-      setToken(res.data);
+  // Clear error message when typing
+  useEffect(() => {
+    setErrorMsg("");
+  }, [email, pwd]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const userData = await userLogin({ email, password: pwd }).unwrap();
+      console.log(userData);
+      dispatch(setCredentials({ ...userData, email }));
+      setEmail("");
+      setPwd("");
       navigate("/dashboard");
-    } else {
-      setErrorMsg(res.error);
+    } catch (err) {
+      console.log(err);
     }
+  };
+
+  const handleEmailInput = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePwdInput = (e) => {
+    setPwd(e.target.value);
   };
 
   return (
@@ -69,7 +87,7 @@ function Login({ setToken }) {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit(login)}
+            onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -82,12 +100,7 @@ function Login({ setToken }) {
               name="email"
               autoComplete="email"
               autoFocus
-              {...register("email", { required: "Email is required" })}
-              error={Boolean(errors.email) || errorMsg}
-              helperText={errors.email?.message}
-              onChange={() => {
-                setErrorMsg("");
-              }}
+              onChange={handleEmailInput}
             />
             <TextField
               margin="normal"
@@ -98,12 +111,7 @@ function Login({ setToken }) {
               type="password"
               id="password"
               autoComplete="current-password"
-              {...register("password", { required: "Password is required" })}
-              error={Boolean(errors.password) || errorMsg}
-              helperText={errors.password?.message}
-              onChange={() => {
-                setErrorMsg("");
-              }}
+              onChange={handlePwdInput}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

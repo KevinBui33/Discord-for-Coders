@@ -1,10 +1,19 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
-import useToken from "../../Utils/useToken";
+import { useSelector } from "react-redux";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { selectCurrentToken } from "../../features/authSlice";
 
-const RequireAuth = ({ children }) => {
-  const { token, setToken } = useToken();
-  return token ? children : <Navigate to="/login" />;
+const RequireAuth = () => {
+  const token = localStorage.getItem("token");
+  const location = useLocation();
+
+  console.log("Current token: " + token);
+
+  return token ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
+  );
 };
 
 export default RequireAuth;
