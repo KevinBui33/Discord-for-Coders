@@ -1,42 +1,30 @@
-.nav-menu {
-  background-color: #060b26;
-  height: auto;
-  padding: 0;
-  width: 10%;
-  display: flex;
-  justify-content: center;
-}
-
-.nav-text {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  list-style: none;
-  height: 60px;
-  padding: 0px 20px;
-}
-
-.nav-text:hover {
-  background-color: #1a83ff;
-  border-radius: 4px;
-}
-
-.nav-text a {
-  text-decoration: none;
-  color: #f5f5f5;
-  font-size: 18px;
-  width: 100%;
+.sidebar-container {
+  background-color: #424549;
   height: 100%;
-  display: flex;
-  align-items: center;
+  color: white;
+  padding: 2.5vh;
 }
 
-.nav-menu-items {
+.friend-btn {
   width: 100%;
-  padding: 0px 20px;
-  margin-top: 5rem;
+  background-color: #7289da;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color ease-out 100ms;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  padding: 10px;
+  color: white;
+  font-size: medium;
+  gap: 1vh;
 }
 
-span {
-  margin-left: 16px;
+.friend-btn:hover {
+  background-color: rgb(168, 168, 168);
+}
+
+.user-list {
 }

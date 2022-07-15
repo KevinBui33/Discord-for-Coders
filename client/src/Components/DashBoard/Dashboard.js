@@ -1,21 +1,32 @@
 import React from "react";
 import "./Dashboard.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentToken } from "../../features/authSlice";
 import Chat from "../Chat/Chat";
-import NavBar from "../Navbar";
 import SideBar from "../SideBar/SideBar";
+import Friends from "../Friend/Friends";
+import { setCurrentView } from "../../features/chat/chatSlice";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
+  const { activeView } = useSelector((state) => state.chat);
+
   return (
     <div className="dashboard">
       <div className="dashboard-container">
-        <div className="sidebar-container">
+        <div className="sidebar">
           <SideBar />
         </div>
-        <div className="message-container">
-          <NavBar />
-          <Chat />
+        <div className="chat">
+          {activeView === "friends" ? <Friends /> : <Chat />}
+          <p>Current chat view: {activeView}</p>
+          <button
+            onClick={() => {
+              dispatch(setCurrentView({ view: "friends" }));
+            }}
+          >
+            Show view
+          </button>
         </div>
       </div>
     </div>
