@@ -3,7 +3,7 @@ const { createSlice } = require("@reduxjs/toolkit");
 const chatSlice = createSlice({
   name: "chat",
   initialState: {
-    activeView: "",
+    activeView: "friends",
   },
   reducers: {
     setCurrentView: (state, action) => {

@@ -1,1 +1,12 @@
+.list-title {
+  margin-top: 10px !important;
+}
 
+.user-account-listitem {
+  border-top: 1px solid rgb(168, 168, 168);
+}
+
+.user-account-container:hover {
+  background-color: rgba(216, 216, 216, 0.452);
+  border-radius: 7px;
+}

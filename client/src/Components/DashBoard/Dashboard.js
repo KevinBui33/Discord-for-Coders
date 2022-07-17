@@ -19,14 +19,6 @@ const Dashboard = () => {
         </div>
         <div className="chat">
           {activeView === "friends" ? <Friends /> : <Chat />}
-          <p>Current chat view: {activeView}</p>
-          <button
-            onClick={() => {
-              dispatch(setCurrentView({ view: "friends" }));
-            }}
-          >
-            Show view
-          </button>
         </div>
       </div>
     </div>
