@@ -57,8 +57,8 @@ app.use(credRoute);
 app.use(userRoute);
 
 require("./utils/passport-config")(passport);
-// Socket stuff
 
+// Socket stuff
 io.use(
   socketioJwt.authorize({
     secret: "mysecret",

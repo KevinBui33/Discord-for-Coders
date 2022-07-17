@@ -8,18 +8,23 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  ListItemIcon,
+  ListItemButton,
+  IconButton,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { SocketContext } from "../../Context/SocketProvider";
-import CheckIcon from "@mui/icons-material/Check";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import FriendNavBar from "./FriendNavBar";
 import * as api from "../../api/api";
+import { useGetUsersQuery } from "../../features/userApiSlice";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 // TODO: Replace api import with RTK query module for API calls
 // TODO: Have a default friend nav option be "clicked" when going to dashboard
-// TODO: Set background color when nav item  clicked
 
 const Friends = () => {
   const [search, setSearch] = useState("");
@@ -27,6 +32,9 @@ const Friends = () => {
   const [notification, setNotification] = useState(false);
   const [clickedNavOption, setClickedNavOption] = useState("");
   const [listStatus, setListStatus] = useState("");
+
+  const [type, setType] = useState(skipToken);
+  const result = useGetUsersQuery(type);
   const socket = useContext(SocketContext);
 
   useEffect(() => {
@@ -52,6 +60,7 @@ const Friends = () => {
     ]);
   }, [socket]);
 
+  // Change the title everytime a nav option is clicked
   useEffect(() => {
     switch (clickedNavOption) {
       case "Online":
@@ -70,8 +79,23 @@ const Friends = () => {
     console.log(item);
 
     setClickedNavOption(item);
-
     // TODO: get users based off nav menu item clicked
+    setType(item);
+
+    console.log(result);
+  };
+
+  const filterUsers = (e) => {
+    setSearch(e.target.value);
+    console.log(search);
+  };
+
+  const declineFriend = () => {
+    console.log("accept");
+  };
+
+  const acceptFriend = () => {
+    console.log("decline");
   };
 
   return (
@@ -88,10 +112,7 @@ const Friends = () => {
         id="outlined-search"
         label="Search field"
         type="search"
-        onChange={(e) => {
-          setSearch(e.target.value);
-          console.log(search);
-        }}
+        onChange={filterUsers}
         InputProps={{
           endAdornment: <SearchIcon />,
         }}
@@ -100,8 +121,20 @@ const Friends = () => {
         <Typography className="list-title">{listStatus}</Typography>
         <List className="user-list">
           {usersList.map((user, index) => (
-            <div className="user-account-listitem">
-              <ListItem key={index} className="user-account-container">
+            <div className="user-account-listitem" key={index}>
+              <ListItem
+                className="user-account-container"
+                secondaryAction={
+                  <div>
+                    <IconButton edge="end" onClick={acceptFriend}>
+                      <CheckCircleIcon fontSize="large" />
+                    </IconButton>
+                    <IconButton onClick={declineFriend}>
+                      <CancelIcon fontSize="large" />
+                    </IconButton>
+                  </div>
+                }
+              >
                 <ListItemAvatar>
                   <Avatar>
                     <AccountCircleIcon />
