@@ -24,22 +24,23 @@ import { useGetUsersQuery } from "../../features/userApiSlice";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 // TODO: Replace api import with RTK query module for API calls
-// TODO: Have a default friend nav option be "clicked" when going to dashboard
 
 const Friends = () => {
   const [search, setSearch] = useState("");
   const [usersList, setUsersList] = useState([]);
   const [notification, setNotification] = useState(false);
   const [clickedNavOption, setClickedNavOption] = useState("");
-  const [listStatus, setListStatus] = useState("Active Users");
+  const [listStatus, setListStatus] = useState("");
 
-  const [type, setType] = useState("online");
+  const [type, setType] = useState("");
   const result = useGetUsersQuery(type);
   const socket = useContext(SocketContext);
 
   // Set the inital state for navbar
   useEffect(() => {
     setClickedNavOption("Online");
+    setType("online");
+    setListStatus("Active Users");
   }, []);
 
   // Get friend request from server only when user is online
