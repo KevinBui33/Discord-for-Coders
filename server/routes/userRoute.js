@@ -20,52 +20,58 @@ router.get("/users", async (req, res) => {
 });
 
 router.get("/friends", async (req, res) => {
-  console.log(req.header);
   const { type } = req.query;
-  // const user = jwt.decode(token);
+  const user = req.user;
 
-  // console.log(`Getting ${type} users for ${user.user_id}`);
+  console.log(`Getting ${type} users for ${user.user_id}`);
 
-  // let queryStr = "";
-  // let queryParams;
+  let queryStr = "";
+  let queryParams;
 
-  // switch (type) {
-  //   case "online":
-  //     break;
-  //   case "all":
-  //     break;
-  //   case "pending":
-  //     queryStr += "SELECT * FROM friendship WHERE user_b = $1 AND status = 0";
-  //     queryParams = [user.user_id];
-  //     break;
-  // }
+  // Pending: 0, friend: 1, blocked: 2
 
-  // try {
-  //   const friendRequests = (await db.query(queryStr, queryParams)).rows;
+  // TODO: Make the online search get only ppl who are online by socket io standards
+  switch (type) {
+    case "online":
+      queryStr += "SELECT * FROM friendship WHERE user_a = $1 AND status = 1";
+      queryParams = [user.user_id];
+      break;
+    case "all":
+      queryStr += "SELECT * FROM friendship WHERE user_a = $1 AND status = 1";
+      queryParams = [user.user_id];
+      break;
+    case "pending":
+      queryStr += "SELECT * FROM friendship WHERE user_b = $1 AND status = 0";
+      queryParams = [user.user_id];
+      break;
+  }
 
-  //   console.log("Ppl who sent you a friend request");
-  //   const requestsAccounts = await Promise.all(
-  //     friendRequests.map(async (f) => {
-  //       try {
-  //         console.log(f);
-  //         const friend = await db.query(
-  //           "SELECT * FROM accounts WHERE user_id = $1",
-  //           [f.user_a]
-  //         );
+  try {
+    const friendRequests = (await db.query(queryStr, queryParams)).rows;
 
-  //         console.log(friend);
-  //         return friend.rows[0];
-  //       } catch (err) {
-  //         throw err;
-  //       }
-  //     })
-  //   );
-  //   console.log(requestsAccounts);
-  //   res.json({ requests: requestsAccounts });
-  // } catch (err) {
-  //   // TODO: send error to client
-  //   console.log(err);
-  // }
+    console.log("Ppl who sent you a friend request");
+    const requestsAccounts = await Promise.all(
+      friendRequests.map(async (f) => {
+        try {
+          console.log(f);
+          const friend = await db.query(
+            "SELECT * FROM accounts WHERE user_id = $1",
+            [f.user_a]
+          );
+
+          console.log(friend);
+          return friend.rows[0];
+        } catch (err) {
+          throw err;
+        }
+      })
+    );
+    console.log(requestsAccounts);
+    res.json({ requests: requestsAccounts });
+  } catch (err) {
+    // TODO: send error to client
+    console.log(err);
+  }
 });
 
 module.exports = router;

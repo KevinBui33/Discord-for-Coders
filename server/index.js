@@ -21,6 +21,7 @@ const userRoute = require("./routes/userRoute");
 const socketController = require("./controller/socketController");
 
 const { pool } = require("./db/db");
+const { verifyJWT } = require("./middleware/verifyJWT");
 
 const io = new Server(server, {
   cors: {
@@ -53,6 +54,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
+
+app.all("*", verifyJWT);
+
 app.use(credRoute);
 app.use(userRoute);
 

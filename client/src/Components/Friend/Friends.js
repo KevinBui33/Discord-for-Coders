@@ -80,7 +80,7 @@ const Friends = () => {
 
     setClickedNavOption(item);
     // TODO: get users based off nav menu item clicked
-    setType(item);
+    setType(item.toLowerCase());
 
     console.log(result);
   };
