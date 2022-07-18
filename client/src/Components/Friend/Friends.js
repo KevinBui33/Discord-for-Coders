@@ -31,12 +31,13 @@ const Friends = () => {
   const [usersList, setUsersList] = useState([]);
   const [notification, setNotification] = useState(false);
   const [clickedNavOption, setClickedNavOption] = useState("");
-  const [listStatus, setListStatus] = useState("");
+  const [listStatus, setListStatus] = useState("Active Users");
 
-  const [type, setType] = useState(skipToken);
+  const [type, setType] = useState("online");
   const result = useGetUsersQuery(type);
   const socket = useContext(SocketContext);
 
+  // Set the inital state for navbar
   useEffect(() => {
     setClickedNavOption("Online");
   }, []);
@@ -51,18 +52,26 @@ const Friends = () => {
     //     setNotification(true);
     //   }
     // });
-
-    setUsersList([
-      { username: "lll" },
-      { username: "qqq" },
-      { username: "www" },
-      { username: "eee" },
-    ]);
   }, [socket]);
 
-  // Change the title everytime a nav option is clicked
   useEffect(() => {
-    switch (clickedNavOption) {
+    if (result.isSuccess) {
+      console.log(result);
+      setUsersList(result.data.requests);
+    } else {
+      // TODO: Show error message
+      console.log("An error occured");
+    }
+  }, [result]);
+
+  // Get users depending on which nav option user clicked
+  const navOptionClick = async (item, event) => {
+    event.preventDefault();
+    console.log(item);
+    setClickedNavOption(item);
+
+    // Change list title by nav option clicked
+    switch (item) {
       case "Online":
         setListStatus("Active Users");
         break;
@@ -72,19 +81,12 @@ const Friends = () => {
       case "Pending":
         setListStatus("Pending");
     }
-  }, [clickedNavOption]);
 
-  const navOptionClick = async (item, event) => {
-    event.preventDefault();
-    console.log(item);
-
-    setClickedNavOption(item);
-    // TODO: get users based off nav menu item clicked
+    // Getting users
     setType(item.toLowerCase());
-
-    console.log(result);
   };
 
+  // Filter the users list based on the search
   const filterUsers = (e) => {
     setSearch(e.target.value);
     console.log(search);
@@ -117,38 +119,43 @@ const Friends = () => {
           endAdornment: <SearchIcon />,
         }}
       />
-      <div className="user-list-container">
-        <Typography className="list-title">{listStatus}</Typography>
-        <List className="user-list">
-          {usersList.map((user, index) => (
-            <div className="user-account-listitem" key={index}>
-              <ListItem
-                className="user-account-container"
-                secondaryAction={
+
+      {result.isLoading ? (
+        <p>Loading</p>
+      ) : (
+        <div className="user-list-container">
+          <Typography className="list-title">{listStatus}</Typography>
+          <List className="user-list">
+            {usersList.map((user, index) => (
+              <div className="user-account-listitem" key={index}>
+                <ListItem
+                  className="user-account-container"
+                  secondaryAction={
+                    <div>
+                      <IconButton edge="end" onClick={acceptFriend}>
+                        <CheckCircleIcon fontSize="large" />
+                      </IconButton>
+                      <IconButton onClick={declineFriend}>
+                        <CancelIcon fontSize="large" />
+                      </IconButton>
+                    </div>
+                  }
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <AccountCircleIcon />
+                    </Avatar>
+                  </ListItemAvatar>
                   <div>
-                    <IconButton edge="end" onClick={acceptFriend}>
-                      <CheckCircleIcon fontSize="large" />
-                    </IconButton>
-                    <IconButton onClick={declineFriend}>
-                      <CancelIcon fontSize="large" />
-                    </IconButton>
+                    <ListItemText primary={user.username} />
+                    <ListItemText secondary="Incoming Friend Request" />
                   </div>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <AccountCircleIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <div>
-                  <ListItemText primary={user.username} />
-                  <ListItemText secondary="Incoming Friend Request" />
-                </div>
-              </ListItem>
-            </div>
-          ))}
-        </List>
-      </div>
+                </ListItem>
+              </div>
+            ))}
+          </List>
+        </div>
+      )}
     </div>
   );
 };

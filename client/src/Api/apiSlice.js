@@ -8,7 +8,6 @@ const baseQuery = fetchBaseQuery({
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token || localStorage.getItem("token");
-    console.log(token);
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
@@ -18,7 +17,6 @@ const baseQuery = fetchBaseQuery({
 
 // If token has experied get a new one
 const baseQueryWithReAuth = async (args, api, extraOptions) => {
-  console.log("calling base query with auth");
   let result = await baseQuery(args, api, extraOptions);
 
   // Refresh token is invalid and need to get a new one

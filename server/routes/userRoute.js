@@ -48,18 +48,18 @@ router.get("/friends", async (req, res) => {
 
   try {
     const friendRequests = (await db.query(queryStr, queryParams)).rows;
+    console.log("==== Friend requests ====");
+    console.log(friendRequests);
 
-    console.log("Ppl who sent you a friend request");
     const requestsAccounts = await Promise.all(
       friendRequests.map(async (f) => {
         try {
-          console.log(f);
           const friend = await db.query(
-            "SELECT * FROM accounts WHERE user_id = $1",
+            "SELECT user_id, email, username FROM accounts WHERE user_id = $1",
             [f.user_a]
           );
 
-          console.log(friend);
+          console.log("Friend account: " + JSON.stringify(friend.rows[0]));
           return friend.rows[0];
         } catch (err) {
           throw err;
