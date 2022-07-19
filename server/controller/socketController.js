@@ -7,7 +7,6 @@ module.exports = (io, socket, linkedUsers) => {
   const disconnectUser = () => {
     // Find user disconnecting user
     const userId = linkedUsers.find((x) => x.clientId === socket.id);
-    console.log(userId);
 
     // Remove user from list
     linkedUsers = linkedUsers.filter((item) => item.userId !== userId.userId);
@@ -15,14 +14,23 @@ module.exports = (io, socket, linkedUsers) => {
   };
 
   const storeClientInfo = () => {
-    // Create user object that linking socket id with user id
-    const user = {
-      clientId: socket.id,
-      userId: socket.decoded_token.user_id,
-    };
+    const objIndex = linkedUsers.findIndex(
+      (obj) => obj.userId === socket.decoded_token.user_id
+    );
+
+    console.log(objIndex);
+
+    if (objIndex !== -1) {
+      linkedUsers[objIndex].clientId = socket.id;
+    } else {
+      // Create user object that linking socket id with user id
+      linkedUsers.push({
+        clientId: socket.id,
+        userId: socket.decoded_token.user_id,
+      });
+    }
 
     // Need to keep storage in a different place (maybe try redis)
-    linkedUsers.push(user);
     console.log(linkedUsers);
   };
 

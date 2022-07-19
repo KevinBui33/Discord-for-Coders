@@ -23,7 +23,7 @@ router.get("/friends", async (req, res) => {
   const { type } = req.query;
   const user = req.user;
 
-  console.log(`Getting ${type} users for ${user.user_id}`);
+  console.log(`Getting \"${type}\" users for user: ${user.user_id}`);
 
   let queryStr = "";
   let queryParams;
@@ -46,6 +46,7 @@ router.get("/friends", async (req, res) => {
       break;
   }
 
+  // TODO: rename variables for dynamic querys
   try {
     const friendRequests = (await db.query(queryStr, queryParams)).rows;
     console.log("==== Friend requests ====");

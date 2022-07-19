@@ -3,13 +3,10 @@ import {
   Avatar,
   TextField,
   Typography,
-  Button,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  ListItemIcon,
-  ListItemButton,
   IconButton,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
@@ -19,11 +16,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import FriendNavBar from "./FriendNavBar";
-import * as api from "../../api/api";
 import { useGetUsersQuery } from "../../features/userApiSlice";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
-
-// TODO: Replace api import with RTK query module for API calls
 
 const Friends = () => {
   const [search, setSearch] = useState("");
@@ -32,7 +26,7 @@ const Friends = () => {
   const [clickedNavOption, setClickedNavOption] = useState("");
   const [listStatus, setListStatus] = useState("");
 
-  const [type, setType] = useState("");
+  const [type, setType] = useState(skipToken);
   const result = useGetUsersQuery(type);
   const socket = useContext(SocketContext);
 
@@ -45,14 +39,17 @@ const Friends = () => {
 
   // Get friend request from server only when user is online
   useEffect(() => {
-    // TODO: This giving errors when redux state is "friends"
-    // socket.on("get_friend_request", (res) => {
-    //   console.log(res);
-    //   if (res.done) {
-    //     // Set a red dot notification on pending
-    //     setNotification(true);
-    //   }
-    // });
+    //TODO: This giving errors when redux state is "friends"
+    console.log(socket);
+    if (socket) {
+      socket.on("get_friend_request", (res) => {
+        console.log(res);
+        if (res.done) {
+          // Set a red dot notification on pending
+          setNotification(true);
+        }
+      });
+    }
   }, [socket]);
 
   useEffect(() => {
@@ -61,7 +58,7 @@ const Friends = () => {
       setUsersList(result.data.requests);
     } else {
       // TODO: Show error message
-      console.log("An error occured");
+      // console.log("An error occured");
     }
   }, [result]);
 

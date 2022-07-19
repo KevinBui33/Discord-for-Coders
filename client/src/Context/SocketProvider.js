@@ -8,7 +8,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     const ENDPOINT = "http://localhost:5000";
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     const newSocket = io(ENDPOINT, {
       query: `token=${token}`,
     });
@@ -17,7 +17,7 @@ export const SocketProvider = ({ children }) => {
     console.log("created socket connection");
 
     newSocket.on("connect", () => {
-      console.log(newSocket.id);
+      console.log("client Socket id: " + newSocket.id);
       newSocket.emit("store_client_info");
     });
   }, []);
