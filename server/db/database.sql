@@ -33,7 +33,7 @@ create table notification_type(
 
 create table linked_users(
     user_id integer primary key not null references accounts, 
-    socket_id integer not null 
+    socket_id varchar (255) not null 
 );
 
 insert into notification_type(name, description) values('friend_request', 'A user wants to be friends with another user'); 

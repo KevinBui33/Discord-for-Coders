@@ -5,7 +5,6 @@ const verifyJWT = async (req, res, next) => {
   if (nonSecurePaths.includes(req.path)) return next();
 
   const token = req.body.token || req.query.token || req.get("authorization");
-  console.log(token);
 
   if (!token) {
     return res.status(403).send("You don't have a token");
@@ -13,7 +12,6 @@ const verifyJWT = async (req, res, next) => {
 
   try {
     const decode = jwt.verify(token.trim().split(/\s+/)[1], "mysecret");
-    console.log(decode);
     req.user = decode;
   } catch (err) {
     return res.status(401).send("Invalid token");

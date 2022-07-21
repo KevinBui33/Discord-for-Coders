@@ -46,7 +46,7 @@ const sessionMiddleware = session({
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser("secret"));
+app.use(cookieParser());
 
 // Add passport to express
 app.use(sessionMiddleware);
@@ -71,7 +71,6 @@ io.use(
 );
 
 //  Socket get user token (decoded_token) shows stuff about the token
-const linkedUsers = [];
-io.on("connection", (socket) => socketController(io, socket, linkedUsers));
+io.on("connection", (socket) => socketController(io, socket));
 
 server.listen(PORT, () => console.log(`server listening on port: ${PORT}`));

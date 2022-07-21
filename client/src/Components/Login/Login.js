@@ -48,12 +48,13 @@ function Login() {
     e.preventDefault();
 
     try {
-      const userData = await userLogin({ email, password: pwd }).unwrap();
-      console.log(userData);
-      dispatch(setCredentials({ ...userData, email }));
-      setEmail("");
-      setPwd("");
-      navigate("/dashboard");
+      const res = await userLogin({ email, password: pwd }).unwrap();
+      if (res.status === 200) {
+        dispatch(setCredentials({ ...res.response, email }));
+        setEmail("");
+        setPwd("");
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.log(err);
     }

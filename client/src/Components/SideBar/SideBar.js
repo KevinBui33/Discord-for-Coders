@@ -13,6 +13,7 @@ import {
 import GroupIcon from "@mui/icons-material/Group";
 import "./SideBar.css";
 
+//TODO: Replace test list to actual friend list
 const test = [
   { username: "lll" },
   { username: "qqq" },

@@ -35,13 +35,15 @@ const login = (req, res, next) => {
       res.status(401);
       res.end(info.message);
     } else {
-      console.log(user);
       let token = jwt.sign(
         { user_id: user.user_id, username: user.username },
         "mysecret"
       );
-      console.log(token);
-      res.json({ token });
+      res
+        .cookie("jwt", token, {
+          httpOnly: true,
+        })
+        .json({ token });
     }
   })(req, res, next);
 };

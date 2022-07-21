@@ -9,6 +9,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { ...credential },
       }),
+      transformResponse: (response, meta, arg) => {
+        return { response, status: meta.response.status };
+      },
     }),
     register: builder.mutation({
       query: (data) => ({

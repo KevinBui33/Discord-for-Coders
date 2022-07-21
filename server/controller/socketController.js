@@ -1,37 +1,45 @@
 const db = require("../db/db");
 
-module.exports = (io, socket, linkedUsers) => {
+module.exports = (io, socket) => {
   console.log(`user connected: ${socket.id}`);
   console.log(`user id: ${socket.decoded_token.user_id}`);
 
-  const disconnectUser = () => {
-    // Find user disconnecting user
-    const userId = linkedUsers.find((x) => x.clientId === socket.id);
-
-    // Remove user from list
-    linkedUsers = linkedUsers.filter((item) => item.userId !== userId.userId);
-    console.log(`User ${userId.userId} has dissconnected`);
-  };
-
-  const storeClientInfo = () => {
-    const objIndex = linkedUsers.findIndex(
-      (obj) => obj.userId === socket.decoded_token.user_id
+  const disconnectUser = async () => {
+    // Find user to disconnect
+    const user = await db.query(
+      "SELECT * FROM linked_users WHERE user_id = $1",
+      [socket.decoded_token.user_id]
     );
 
-    console.log(objIndex);
+    console.log(`User: ${JSON.stringify(user.rows)}`);
 
-    if (objIndex !== -1) {
-      linkedUsers[objIndex].clientId = socket.id;
-    } else {
-      // Create user object that linking socket id with user id
-      linkedUsers.push({
-        clientId: socket.id,
-        userId: socket.decoded_token.user_id,
-      });
+    // Throw error if user is not connected to socket
+    if (!user.rows[0]) {
+      return new Error("User was not connected to socket instance");
     }
 
-    // Need to keep storage in a different place (maybe try redis)
-    console.log(linkedUsers);
+    // Delete socket id once user dissconect
+    await db.query("DELETE FROM linked_users WHERE user_id = $1", [
+      socket.decoded_token.user_id,
+    ]);
+  };
+
+  const storeClientInfo = async () => {
+    // Find if user is already connected, if exists then update to new socket id
+    const user = await db.query(
+      "UPDATE linked_users SET socket_id = $1 WHERE user_id = $2 RETURNING *",
+      [socket.id, socket.decoded_token.user_id]
+    );
+
+    console.log(user.rows[0]);
+
+    // If user does not have a socket id, then add to DB
+    if (!user.rows[0]) {
+      await db.query(
+        "INSERT INTO linked_users(user_id, socket_id) VALUES ($1, $2)",
+        [socket.decoded_token.user_id, socket.id]
+      );
+    }
   };
 
   const sendFriendRequst = async (friendName, cb) => {

@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import Chat from "./Components/Chat/Chat";
-import { SocketProvider } from "./Context/SocketProvider";
 import RequireAuth from "./Components/Auth/RequireAuth";
 import Dashboard from "./Components/DashBoard/Dashboard";
 import { ThemeProvider } from "@emotion/react";
@@ -29,24 +28,22 @@ const theme = createTheme({
 
 function App() {
   return (
-    <SocketProvider>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/">
-              {/*Public routes*/}
-              <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
-              {/*Protected Routes*/}
-              <Route element={<RequireAuth />}>
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="chat" element={<Chat />} />
-              </Route>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/">
+            {/*Public routes*/}
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            {/*Protected Routes*/}
+            <Route element={<RequireAuth />}>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="chat" element={<Chat />} />
             </Route>
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </SocketProvider>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

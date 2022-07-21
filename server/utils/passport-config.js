@@ -16,8 +16,6 @@ module.exports = (passport) => {
             if (user === null)
               done(null, false, { message: "User does not exists" });
 
-            console.log(password);
-
             await bcrypt
               .compare(password, user.password)
               .then((res) => {
