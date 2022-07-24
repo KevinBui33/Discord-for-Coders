@@ -66,6 +66,7 @@ require("./utils/passport-config")(passport);
 
 // Socket stuff
 
+// Authentication middle ware
 io.use((socket, next) => {
   if (socket.handshake.headers.cookie) {
     console.log(socket.handshake.headers.cookie);

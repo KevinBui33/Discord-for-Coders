@@ -34,7 +34,7 @@ function Login() {
 
   // Redirect to dashboard if token in session storage
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("loggedIn")) {
       navigate("/dashboard");
     }
   }, []);
@@ -51,6 +51,7 @@ function Login() {
       const res = await userLogin({ email, password: pwd }).unwrap();
       if (res.status === 200) {
         dispatch(setCredentials({ ...res.response, email }));
+        localStorage.setItem("loggedIn", true);
         setEmail("");
         setPwd("");
         navigate("/dashboard");

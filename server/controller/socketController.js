@@ -5,25 +5,7 @@ module.exports = (io, socket) => {
   // console.log(`user id: ${socket.decoded_token.user_id}`);
   console.log(`user token: ${JSON.stringify(socket.auth)}`);
 
-  const disconnectUser = async () => {
-    // Find user to disconnect
-    const user = await db.query(
-      "SELECT * FROM linked_users WHERE user_id = $1",
-      [socket.decoded_token.user_id]
-    );
-
-    console.log(`User: ${JSON.stringify(user.rows)}`);
-
-    // Throw error if user is not connected to socket
-    if (!user.rows[0]) {
-      return new Error("User was not connected to socket instance");
-    }
-
-    // Delete socket id once user dissconect
-    await db.query("DELETE FROM linked_users WHERE user_id = $1", [
-      socket.decoded_token.user_id,
-    ]);
-  };
+  const disconnectUser = async () => {};
 
   const sendFriendRequst = async (friendName, cb) => {
     console.log(`sending friend request to: ${friendName}`);
