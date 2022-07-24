@@ -4,7 +4,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { selectCurrentToken } from "../../features/authSlice";
 
 const RequireAuth = () => {
-  const token = useSelector(selectCurrentToken);
+  const token = localStorage.getItem("token");
   const location = useLocation();
 
   console.log("Current token: " + token);

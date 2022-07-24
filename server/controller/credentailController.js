@@ -39,6 +39,7 @@ const login = (req, res, next) => {
         { user_id: user.user_id, username: user.username },
         "mysecret"
       );
+
       res
         .cookie("jwt", token, {
           httpOnly: true,

@@ -9,9 +9,7 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     const ENDPOINT = "http://localhost:5000";
     const token = localStorage.getItem("token");
-    const newSocket = io(ENDPOINT, {
-      query: `token=${token}`,
-    });
+    const newSocket = io(ENDPOINT, { withCredentials: true });
 
     setSocket(newSocket);
     console.log("created socket connection");

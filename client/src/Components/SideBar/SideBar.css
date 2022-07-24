@@ -3,6 +3,7 @@
   height: 100%;
   color: white;
   padding: 2.5vh;
+  position: relative;
 }
 
 .friend-btn {
@@ -27,4 +28,13 @@
 }
 
 .user-list {
+}
+
+.user-options {
+  display: flex;
+  padding: 10px;
+  gap: 10px;
+  position: absolute;
+  bottom: 0;
+  border-top: solid 1px rgb(168, 168, 168);
 }

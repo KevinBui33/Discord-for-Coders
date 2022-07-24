@@ -39,8 +39,6 @@ const Friends = () => {
 
   // Get friend request from server only when user is online
   useEffect(() => {
-    //TODO: This giving errors when redux state is "friends"
-    console.log(socket);
     if (socket) {
       socket.on("get_friend_request", (res) => {
         console.log(res);

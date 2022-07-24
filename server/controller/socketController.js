@@ -2,7 +2,8 @@ const db = require("../db/db");
 
 module.exports = (io, socket) => {
   console.log(`user connected: ${socket.id}`);
-  console.log(`user id: ${socket.decoded_token.user_id}`);
+  // console.log(`user id: ${socket.decoded_token.user_id}`);
+  console.log(`user token: ${JSON.stringify(socket.auth)}`);
 
   const disconnectUser = async () => {
     // Find user to disconnect
@@ -25,21 +26,19 @@ module.exports = (io, socket) => {
   };
 
   const storeClientInfo = async () => {
-    // Find if user is already connected, if exists then update to new socket id
-    const user = await db.query(
-      "UPDATE linked_users SET socket_id = $1 WHERE user_id = $2 RETURNING *",
-      [socket.id, socket.decoded_token.user_id]
-    );
-
-    console.log(user.rows[0]);
-
-    // If user does not have a socket id, then add to DB
-    if (!user.rows[0]) {
-      await db.query(
-        "INSERT INTO linked_users(user_id, socket_id) VALUES ($1, $2)",
-        [socket.decoded_token.user_id, socket.id]
-      );
-    }
+    // // Find if user is already connected, if exists then update to new socket id
+    // const user = await db.query(
+    //   "UPDATE linked_users SET socket_id = $1 WHERE user_id = $2 RETURNING *",
+    //   [socket.id, socket.decoded_token.user_id]
+    // );
+    // console.log(user.rows[0]);
+    // // If user does not have a socket id, then add to DB
+    // if (!user.rows[0]) {
+    //   await db.query(
+    //     "INSERT INTO linked_users(user_id, socket_id) VALUES ($1, $2)",
+    //     [socket.decoded_token.user_id, socket.id]
+    //   );
+    // }
   };
 
   const sendFriendRequst = async (friendName, cb) => {

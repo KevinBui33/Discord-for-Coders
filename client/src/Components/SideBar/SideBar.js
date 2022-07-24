@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Avatar,
-  Button,
   List,
-  ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
@@ -12,6 +9,7 @@ import {
 } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import "./SideBar.css";
+import { useSelector } from "react-redux";
 
 //TODO: Replace test list to actual friend list
 const test = [
@@ -21,7 +19,7 @@ const test = [
   { username: "eee" },
 ];
 
-function SideBar() {
+const SideBar = ({ userData }) => {
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
@@ -49,9 +47,12 @@ function SideBar() {
           ))}
         </List>
       </div>
-      <div className="user-options"></div>
+      <div className="user-options">
+        <Avatar />
+        <Typography>{userData.username}</Typography>
+      </div>
     </div>
   );
-}
+};
 
 export default SideBar;

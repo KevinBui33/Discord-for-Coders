@@ -75,4 +75,19 @@ router.get("/friends", async (req, res) => {
   }
 });
 
+router.get("/user", async (req, res) => {
+  const user = req.user;
+
+  await db
+    .query("SELECT * FROM accounts WHERE user_id = $1", [user.user_id])
+    .then((data) => {
+      const { rows } = data;
+      if (rows[0]) {
+        console.log(`user: ${JSON.stringify(rows[0])}`);
+        res.json(rows[0]);
+      }
+    })
+    .catch((err) => console.log(err));
+});
+
 module.exports = router;

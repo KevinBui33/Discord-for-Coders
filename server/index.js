@@ -8,6 +8,7 @@ const cors = require("cors");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
+const cookie = require("cookie");
 const socketioJwt = require("socketio-jwt");
 const { Server } = require("socket.io");
 const pgSession = require("connect-pg-simple")(session);
@@ -28,6 +29,8 @@ const io = new Server(server, {
     origin: "http://localhost:3000",
     credentials: true,
   },
+
+  cookie: true,
 });
 
 // Connect to DB
@@ -63,12 +66,23 @@ app.use(userRoute);
 require("./utils/passport-config")(passport);
 
 // Socket stuff
-io.use(
-  socketioJwt.authorize({
-    secret: "mysecret",
-    handshake: true,
-  })
-);
+
+io.use((socket, next) => {
+  if (socket.handshake.headers.cookie) {
+    console.log(socket.handshake.headers.cookie);
+
+    socket.auth = { decoded_token: socket.handshake.headers.cookie };
+    next();
+  }
+});
+
+// TODO: Use own authentication
+// io.use(
+//   socketioJwt.authorize({
+//     secret: "mysecret",
+//     handshake: true,
+//   })
+// );
 
 //  Socket get user token (decoded_token) shows stuff about the token
 io.on("connection", (socket) => socketController(io, socket));
