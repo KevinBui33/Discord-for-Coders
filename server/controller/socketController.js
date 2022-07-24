@@ -25,22 +25,6 @@ module.exports = (io, socket) => {
     ]);
   };
 
-  const storeClientInfo = async () => {
-    // // Find if user is already connected, if exists then update to new socket id
-    // const user = await db.query(
-    //   "UPDATE linked_users SET socket_id = $1 WHERE user_id = $2 RETURNING *",
-    //   [socket.id, socket.decoded_token.user_id]
-    // );
-    // console.log(user.rows[0]);
-    // // If user does not have a socket id, then add to DB
-    // if (!user.rows[0]) {
-    //   await db.query(
-    //     "INSERT INTO linked_users(user_id, socket_id) VALUES ($1, $2)",
-    //     [socket.decoded_token.user_id, socket.id]
-    //   );
-    // }
-  };
-
   const sendFriendRequst = async (friendName, cb) => {
     console.log(`sending friend request to: ${friendName}`);
     const fromUser = socket.decoded_token;
@@ -107,7 +91,6 @@ module.exports = (io, socket) => {
 
   const sendMessage = () => {};
 
-  socket.on("store_client_info", storeClientInfo);
   socket.on("send_friend_request", sendFriendRequst);
   socket.on("send_msg", sendMessage);
   socket.on("disconnect", disconnectUser);

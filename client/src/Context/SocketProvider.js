@@ -13,11 +13,7 @@ export const SocketProvider = ({ children }) => {
 
     setSocket(newSocket);
     console.log("created socket connection");
-
-    newSocket.on("connect", () => {
-      console.log("client Socket id: " + newSocket.id);
-      newSocket.emit("store_client_info");
-    });
+    newSocket.connect();
   }, []);
 
   return (
