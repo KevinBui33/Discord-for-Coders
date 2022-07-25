@@ -69,10 +69,7 @@ require("./utils/passport-config")(passport);
 // Authentication middle ware
 io.use((socket, next) => {
   if (socket.handshake.headers.cookie) {
-    console.log(socket.handshake.headers.cookie);
-
     const cookies = cookie.parse(socket.handshake.headers.cookie);
-    console.log(cookies);
 
     try {
       const decode = jwt.verify(cookies.jwt, "mysecret");

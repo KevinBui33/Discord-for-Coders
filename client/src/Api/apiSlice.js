@@ -6,13 +6,6 @@ const baseURL = "http://localhost:5000";
 const baseQuery = fetchBaseQuery({
   baseUrl: baseURL,
   credentials: "include",
-  prepareHeaders: (headers, { getState }) => {
-    const token = getState().auth.token || localStorage.getItem("token");
-    if (token) {
-      headers.set("authorization", `Bearer ${token}`);
-    }
-    return headers;
-  },
 });
 
 // If token has experied get a new one

@@ -7,7 +7,6 @@ const RequireAuth = () => {
   const token = localStorage.getItem("loggedIn");
   const location = useLocation();
 
-  console.log(token);
   return token ? (
     <Outlet />
   ) : (

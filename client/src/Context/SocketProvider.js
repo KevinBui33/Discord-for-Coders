@@ -12,7 +12,9 @@ export const SocketProvider = ({ children }) => {
 
     setSocket(newSocket);
     console.log("created socket connection");
-    newSocket.connect();
+    newSocket.on("connect", () => {
+      newSocket.emit("link_user");
+    });
   }, []);
 
   return (
