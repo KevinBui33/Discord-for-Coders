@@ -8,6 +8,7 @@ import {
   ListItemAvatar,
   ListItemText,
   IconButton,
+  Button,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -23,7 +24,6 @@ const Friends = () => {
   const [search, setSearch] = useState("");
   const [usersList, setUsersList] = useState([]);
   const [notification, setNotification] = useState(false);
-  const [clickedNavOption, setClickedNavOption] = useState("");
   const [listStatus, setListStatus] = useState("");
 
   const [type, setType] = useState(skipToken);
@@ -32,7 +32,6 @@ const Friends = () => {
 
   // Set the inital state for navbar
   useEffect(() => {
-    setClickedNavOption("Online");
     setType("online");
     setListStatus("Active Users");
   }, []);
@@ -40,7 +39,7 @@ const Friends = () => {
   // Get friend request from server only when user is online
   useEffect(() => {
     if (socket) {
-      socket.on("get_friend_request", (res) => {
+      socket.on("friend_request", (res) => {
         console.log(res);
         if (res.done) {
           // Set a red dot notification on pending
@@ -51,8 +50,8 @@ const Friends = () => {
   }, [socket]);
 
   useEffect(() => {
+    console.log("getting the results for users thing a ma bob");
     if (result.isSuccess) {
-      console.log(result);
       setUsersList(result.data.requests);
     } else {
       // TODO: Show error message
@@ -60,11 +59,13 @@ const Friends = () => {
     }
   }, [result]);
 
+  useEffect(() => {
+    console.log(type);
+  }, [type]);
+
   // Get users depending on which nav option user clicked
   const navOptionClick = async (item, event) => {
     event.preventDefault();
-    console.log(item);
-    setClickedNavOption(item);
 
     // Change list title by nav option clicked
     switch (item) {
@@ -103,7 +104,7 @@ const Friends = () => {
         notificationDot={
           notification ? <span className="btn-notif"></span> : ""
         }
-        selectedOption={clickedNavOption}
+        selectedOption={type}
       />
       <TextField
         fullWidth
@@ -115,6 +116,14 @@ const Friends = () => {
           endAdornment: <SearchIcon />,
         }}
       />
+
+      <Button
+        onClick={() => {
+          socket.emit("test", 3);
+        }}
+      >
+        test
+      </Button>
 
       {result.isLoading ? (
         <p>Loading</p>

@@ -27,7 +27,7 @@ function FriendPopUp({ trigger, setTrigger }) {
 
     // Send friend request to another user VIA api (not socket io)
     // close tab on sucess
-    socket.emit("send_friend_request", search, (response) => {
+    socket.emit("friend_request", search, (response) => {
       console.log(response);
 
       if (response.done) {
