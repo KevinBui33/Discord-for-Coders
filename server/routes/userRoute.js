@@ -75,6 +75,8 @@ router.get("/friends", async (req, res) => {
   }
 });
 
+router.post("friend", (req, res) => {});
+
 router.get("/user", async (req, res) => {
   const user = req.user;
 

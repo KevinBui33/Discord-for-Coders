@@ -112,14 +112,17 @@ module.exports = (io, socket) => {
   socket.on("friend_request", sendFriendRequst);
   socket.on("send_msg", sendMessage);
 
-  socket.on("test", async (id) => {
-    console.log("calling test");
-    const test = await db.query(
-      "SELECT * FROM linked_users WHERE user_id = $1",
-      [id]
-    );
+  socket.on("testto", async () => {
+    let res = await db.query("SELECT * FROM linked_users WHERE user_id = $1", [
+      3,
+    ]);
 
-    console.log(test.rows[0]);
-    socket.to(test.rows[0].socket_id).emit("test", "it worked");
+    if (res.rows[0]) {
+      console.log(res.rows[0]);
+      socket.to(res.rows[0].socket_id).emit("test", {
+        msg: "you got this from the socket server",
+        done: true,
+      });
+    }
   });
 };

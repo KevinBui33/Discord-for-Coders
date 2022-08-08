@@ -8,7 +8,6 @@ import {
   ListItemAvatar,
   ListItemText,
   IconButton,
-  Button,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -17,7 +16,10 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import FriendNavBar from "./FriendNavBar";
-import { useGetUsersQuery } from "../../features/userApiSlice";
+import {
+  useChangeFriendStatusMutation,
+  useGetUsersQuery,
+} from "../../features/userApiSlice";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 const Friends = () => {
@@ -26,6 +28,8 @@ const Friends = () => {
   const [notification, setNotification] = useState(false);
   const [listStatus, setListStatus] = useState("");
 
+  // API calls
+  const [changeFriendStatus, { isLoading }] = useChangeFriendStatusMutation();
   const [type, setType] = useState(skipToken);
   const result = useGetUsersQuery(type);
   const socket = useContext(SocketContext);
@@ -34,6 +38,13 @@ const Friends = () => {
   useEffect(() => {
     setType("online");
     setListStatus("Active Users");
+
+    if (socket) {
+      socket.on("test", (res) => {
+        console.log("test socket");
+        console.log(res);
+      });
+    }
   }, []);
 
   // Get friend request from server only when user is online
@@ -44,13 +55,16 @@ const Friends = () => {
         if (res.done) {
           // Set a red dot notification on pending
           setNotification(true);
+          // if current nav option is pending, then live update it, if not then do nothing
+          console.log(type);
+          setType("pending");
         }
       });
     }
   }, [socket]);
 
   useEffect(() => {
-    console.log("getting the results for users thing a ma bob");
+    console.log(result);
     if (result.isSuccess) {
       setUsersList(result.data.requests);
     } else {
@@ -89,8 +103,11 @@ const Friends = () => {
     console.log(search);
   };
 
-  const declineFriend = () => {
+  const declineFriend = async (userId) => {
     console.log("accept");
+    try {
+      const res = await changeFriendStatus({ userId, status: "decline" });
+    } catch (err) {}
   };
 
   const acceptFriend = () => {
@@ -117,13 +134,13 @@ const Friends = () => {
         }}
       />
 
-      <Button
+      <button
         onClick={() => {
-          socket.emit("test", 3);
+          console.log(type);
         }}
       >
-        test
-      </Button>
+        click me
+      </button>
 
       {result.isLoading ? (
         <p>Loading</p>
@@ -137,10 +154,13 @@ const Friends = () => {
                   className="user-account-container"
                   secondaryAction={
                     <div>
-                      <IconButton edge="end" onClick={acceptFriend}>
+                      <IconButton
+                        edge="end"
+                        onClick={() => declineFriend(user.user_id)}
+                      >
                         <CheckCircleIcon fontSize="large" />
                       </IconButton>
-                      <IconButton onClick={declineFriend}>
+                      <IconButton onClick={acceptFriend}>
                         <CancelIcon fontSize="large" />
                       </IconButton>
                     </div>
