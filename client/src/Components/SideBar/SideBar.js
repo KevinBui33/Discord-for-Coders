@@ -9,7 +9,8 @@ import {
 } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import "./SideBar.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentView } from "../../features/chat/chatSlice";
 
 //TODO: Replace test list to actual friend list
 const test = [
@@ -20,16 +21,25 @@ const test = [
 ];
 
 const SideBar = ({ userData }) => {
+  const dispatch = useDispatch();
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
     setUserList(test);
   }, []);
 
+  const friendView = () => {
+    dispatch(setCurrentView({ view: "friends" }));
+  };
+
+  const chatView = () => {
+    dispatch(setCurrentView({ view: "privateMsg" }));
+  };
+
   return (
     <div className="sidebar-container">
       <div className="sidebar-buttons">
-        <button className="friend-btn">
+        <button className="friend-btn" onClick={friendView}>
           <GroupIcon />
           Friends
         </button>
@@ -38,7 +48,7 @@ const SideBar = ({ userData }) => {
         <List>
           <Typography>DIRECT MESSAGES</Typography>
           {userList.map((item, index) => (
-            <ListItemButton key={index}>
+            <ListItemButton key={index} onClick={chatView}>
               <ListItemAvatar>
                 <Avatar> </Avatar>
               </ListItemAvatar>

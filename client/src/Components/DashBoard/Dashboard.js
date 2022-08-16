@@ -16,8 +16,8 @@ const Dashboard = () => {
   const userInfo = useGetUserInfoQuery();
 
   useEffect(() => {
-    console.log(userInfo);
-  }, [userInfo]);
+    console.log(activeView);
+  }, [activeView]);
 
   return (
     <SocketProvider>
