@@ -100,7 +100,6 @@ const Friends = () => {
   // Filter the users list based on the search
   const filterUsers = (e) => {
     setSearch(e.target.value);
-    console.log(search);
   };
 
   const declineFriend = async (userId) => {
@@ -133,14 +132,6 @@ const Friends = () => {
           endAdornment: <SearchIcon />,
         }}
       />
-
-      <button
-        onClick={() => {
-          console.log(type);
-        }}
-      >
-        click me
-      </button>
 
       {result.isLoading ? (
         <p>Loading</p>
