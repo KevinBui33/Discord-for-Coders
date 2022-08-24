@@ -16,7 +16,6 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { authApi } from "../../api/authAPI";
 
 // TODO: Make error message disappear when inputting text field

@@ -77,6 +77,10 @@ router.get("/friends", async (req, res) => {
 
 router.post("friend", (req, res) => {});
 
+/**
+ * Route for getting currently logged in user
+ * @name get/user
+ */
 router.get("/user", async (req, res) => {
   const user = req.user;
 
