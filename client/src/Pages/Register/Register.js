@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
-import { authApi } from "../../services/api/authAPI";
+import { authApi } from "../../api/authAPI";
 
 function Register() {
   const navigate = useNavigate();
