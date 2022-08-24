@@ -16,22 +16,15 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import FriendNavBar from "./FriendNavBar";
-import {
-  useChangeFriendStatusMutation,
-  useGetUsersQuery,
-} from "../../features/userApiSlice";
-import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 const Friends = () => {
   const [search, setSearch] = useState("");
+  const [type, setType] = useState();
   const [usersList, setUsersList] = useState([]);
   const [notification, setNotification] = useState(false);
   const [listStatus, setListStatus] = useState("");
 
   // API calls
-  const [changeFriendStatus, { isLoading }] = useChangeFriendStatusMutation();
-  const [type, setType] = useState(skipToken);
-  const result = useGetUsersQuery(type);
   const socket = useContext(SocketContext);
 
   // Set the inital state for navbar
@@ -63,20 +56,6 @@ const Friends = () => {
     }
   }, [socket]);
 
-  useEffect(() => {
-    console.log(result);
-    if (result.isSuccess) {
-      setUsersList(result.data.requests);
-    } else {
-      // TODO: Show error message
-      // console.log("An error occured");
-    }
-  }, [result]);
-
-  useEffect(() => {
-    console.log(type);
-  }, [type]);
-
   // Get users depending on which nav option user clicked
   const navOptionClick = async (item, event) => {
     event.preventDefault();
@@ -96,18 +75,7 @@ const Friends = () => {
     // Getting users
     setType(item.toLowerCase());
   };
-
-  // Filter the users list based on the search
-  const filterUsers = (e) => {
-    setSearch(e.target.value);
-  };
-
-  const declineFriend = async (userId) => {
-    console.log("accept");
-    try {
-      const res = await changeFriendStatus({ userId, status: "decline" });
-    } catch (err) {}
-  };
+  const declineFriend = async (userId) => {};
 
   const acceptFriend = () => {
     console.log("decline");
@@ -127,51 +95,49 @@ const Friends = () => {
         id="outlined-search"
         label="Search field"
         type="search"
-        onChange={filterUsers}
+        onChange={(e) => {
+          setSearch(e.target.value);
+        }}
         InputProps={{
           endAdornment: <SearchIcon />,
         }}
       />
 
-      {result.isLoading ? (
-        <p>Loading</p>
-      ) : (
-        <div className="user-list-container">
-          <Typography className="list-title">{listStatus}</Typography>
-          <List className="user-list">
-            {usersList.map((user, index) => (
-              <div className="user-account-listitem" key={index}>
-                <ListItem
-                  className="user-account-container"
-                  secondaryAction={
-                    <div>
-                      <IconButton
-                        edge="end"
-                        onClick={() => declineFriend(user.user_id)}
-                      >
-                        <CheckCircleIcon fontSize="large" />
-                      </IconButton>
-                      <IconButton onClick={acceptFriend}>
-                        <CancelIcon fontSize="large" />
-                      </IconButton>
-                    </div>
-                  }
-                >
-                  <ListItemAvatar>
-                    <Avatar>
-                      <AccountCircleIcon />
-                    </Avatar>
-                  </ListItemAvatar>
+      <div className="user-list-container">
+        <Typography className="list-title">{listStatus}</Typography>
+        <List className="user-list">
+          {usersList.map((user, index) => (
+            <div className="user-account-listitem" key={index}>
+              <ListItem
+                className="user-account-container"
+                secondaryAction={
                   <div>
-                    <ListItemText primary={user.username} />
-                    <ListItemText secondary="Incoming Friend Request" />
+                    <IconButton
+                      edge="end"
+                      onClick={() => declineFriend(user.user_id)}
+                    >
+                      <CheckCircleIcon fontSize="large" />
+                    </IconButton>
+                    <IconButton onClick={acceptFriend}>
+                      <CancelIcon fontSize="large" />
+                    </IconButton>
                   </div>
-                </ListItem>
-              </div>
-            ))}
-          </List>
-        </div>
-      )}
+                }
+              >
+                <ListItemAvatar>
+                  <Avatar>
+                    <AccountCircleIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <div>
+                  <ListItemText primary={user.username} />
+                  <ListItemText secondary="Incoming Friend Request" />
+                </div>
+              </ListItem>
+            </div>
+          ))}
+        </List>
+      </div>
     </div>
   );
 };

@@ -3,6 +3,8 @@ import { handleError, handleResponse } from "./response";
 
 const BASEURL = "http://localhost:5000";
 
+axios.defaults.withCredentials = true;
+
 /**
  *
  * @param {string} resource
