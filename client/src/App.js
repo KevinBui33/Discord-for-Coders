@@ -1,10 +1,10 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./Components/Login/Login";
-import Register from "./Components/Register/Register";
+import Login from "./Pages/Login/Login";
+import Register from "./Pages/Register/Register";
 import Chat from "./Components/Chat/Chat";
 import RequireAuth from "./Components/Auth/RequireAuth";
-import Dashboard from "./Components/DashBoard/Dashboard";
+import Dashboard from "./Pages/DashBoard/Dashboard";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 
