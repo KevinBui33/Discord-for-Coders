@@ -17,19 +17,16 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../../features/authSlice";
-import { useLoginMutation } from "../../features/authApiSlice";
+import { authApi } from "../../services/api/authAPI";
 
 // TODO: Make error message disappear when inputting text field
 const theme = createTheme();
 
 function Login() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const [userLogin, { isLoading }] = useLoginMutation();
   const [email, setEmail] = useState("");
-  const [pwd, setPwd] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
   // Redirect to dashboard if token in session storage
@@ -42,31 +39,25 @@ function Login() {
   // Clear error message when typing
   useEffect(() => {
     setErrorMsg("");
-  }, [email, pwd]);
+  }, [email, password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const cred = Object.fromEntries(data);
+    console.log(cred);
 
-    try {
-      const res = await userLogin({ email, password: pwd }).unwrap();
-      if (res.status === 200) {
-        dispatch(setCredentials({ ...res.response, email }));
-        localStorage.setItem("loggedIn", true);
+    await authApi
+      .login(cred)
+      .then((res) => {
+        localStorage.setItem("loggedIn", "true");
         setEmail("");
-        setPwd("");
+        setPassword("");
         navigate("/dashboard");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const handleEmailInput = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePwdInput = (e) => {
-    setPwd(e.target.value);
+      })
+      .catch((err) => {
+        console.log("error in reg occured");
+      });
   };
 
   return (
@@ -102,7 +93,9 @@ function Login() {
               name="email"
               autoComplete="email"
               autoFocus
-              onChange={handleEmailInput}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
             />
             <TextField
               margin="normal"
@@ -113,7 +106,9 @@ function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={handlePwdInput}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

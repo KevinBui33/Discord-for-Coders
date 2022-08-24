@@ -3,7 +3,7 @@ const cookie = require("cookie");
 
 const verifyJWT = async (req, res, next) => {
   const nonSecurePaths = ["/", "/login", "/register"];
-  if (nonSecurePaths.includes(req.path)) return next();
+  if (nonSecurePaths.includes(req.params[0])) return next();
 
   const cookies = cookie.parse(req.headers.cookie);
 

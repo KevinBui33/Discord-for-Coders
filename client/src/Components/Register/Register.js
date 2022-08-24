@@ -12,16 +12,11 @@ import {
   Link,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useRegisterMutation } from "../../features/authApiSlice";
 import { useNavigate } from "react-router-dom";
-
-// TODO: Handle error messages
-// TODO: say that accout was made (need snack bar)
+import { authApi } from "../../services/api/authAPI";
 
 function Register() {
   const navigate = useNavigate();
-  const [register, { isloading }] = useRegisterMutation();
-  const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,17 +24,14 @@ function Register() {
     const regInfo = Object.fromEntries(data);
 
     console.log(regInfo);
-    await register(regInfo)
-      .unwrap()
+
+    await authApi
+      .register(regInfo)
       .then((res) => {
-        console.log(res);
-        if (res) {
-          navigate("/login");
-        }
+        navigate("/login");
       })
       .catch((err) => {
-        console.log("An error occured in registering");
-        console.log(err);
+        console.log("error in reg occured");
       });
   };
 

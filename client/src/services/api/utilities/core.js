@@ -3,6 +3,7 @@ import { apiProvider } from "./provider";
 // Base class for API calls
 export class ApiCore {
   constructor(options) {
+    this.url = options.url;
     if (options.getAll) {
       this.getAll = () => {
         return apiProvider.getAll(options.url);
@@ -17,7 +18,7 @@ export class ApiCore {
 
     if (options.post) {
       this.post = (data) => {
-        return apiProvider.post(options.url, data);
+        return apiProvider.post(this.url, data);
       };
     }
 
