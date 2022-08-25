@@ -15,5 +15,5 @@ export const handleError = (error) => {
     return error.data;
   }
 
-  return error;
+  return Promise.reject(error);
 };

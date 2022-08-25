@@ -20,7 +20,7 @@ const FriendNavBar = ({ navOptionClick, notificationDot, selectedOption }) => {
             <li
               key={index}
               className={`navbar-item ${
-                item.toLowerCase() === selectedOption ? "selected-option" : ""
+                item === selectedOption ? "selected-option" : ""
               }`}
             >
               <a

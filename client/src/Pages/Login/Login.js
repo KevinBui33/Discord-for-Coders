@@ -44,18 +44,19 @@ function Login() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const cred = Object.fromEntries(data);
-    console.log(cred);
 
     await authApi
       .login(cred)
       .then((res) => {
-        localStorage.setItem("loggedIn", "true");
-        setEmail("");
-        setPassword("");
-        navigate("/dashboard");
+        if (res) {
+          localStorage.setItem("loggedIn", "true");
+          setEmail("");
+          setPassword("");
+          navigate("/dashboard");
+        }
       })
       .catch((err) => {
-        console.log("error in reg occured");
+        setErrorMsg(err.response?.data);
       });
   };
 
