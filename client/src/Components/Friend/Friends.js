@@ -61,7 +61,12 @@ const Friends = () => {
   };
   const declineFriend = async (userId) => {};
 
-  const acceptFriend = () => {};
+  const acceptFriend = async (userId) => {
+    socket.emit("accept_friend", { userId }, (data, err) => {
+      //TODO Display toast msg for accepting friend request + update firend list
+      console.log(data);
+    });
+  };
 
   return (
     <div className="friend-container">
@@ -98,11 +103,17 @@ const Friends = () => {
                     <div>
                       <IconButton
                         edge="end"
-                        onClick={() => declineFriend(user.user_id)}
+                        onClick={() => {
+                          acceptFriend(user.user_id);
+                        }}
                       >
                         <CheckCircleIcon fontSize="large" />
                       </IconButton>
-                      <IconButton onClick={acceptFriend}>
+                      <IconButton
+                        onClick={() => {
+                          declineFriend(user.user_id);
+                        }}
+                      >
                         <CancelIcon fontSize="large" />
                       </IconButton>
                     </div>

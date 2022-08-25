@@ -103,23 +103,34 @@ module.exports = (io, socket) => {
     }
   };
 
+  /**
+   * Accepting friend request
+   */
+  const acceptFriendRequest = async (data, cb) => {
+    console.log(`Accepting friend request from ${data.userId}`);
+    const { decode } = socket.auth;
+
+    await db
+      .query(
+        "UPDATE friendship SET status = 1 WHERE user_a = $1 AND user_b = $2",
+        [data.userId, decode.user_id]
+      )
+      .then((res) => {
+        cb("sucess", null);
+      })
+      .catch((err) => {});
+  };
+
+  /**
+   * Declining friend request
+   */
+
+  const declineFriendRequest = async () => {};
+
   const sendMessage = () => {};
   socket.on("disconnect", disconnect);
   socket.on("link_user", linkUser);
   socket.on("friend_request", sendFriendRequst);
   socket.on("send_msg", sendMessage);
-
-  socket.on("testto", async () => {
-    let res = await db.query("SELECT * FROM linked_users WHERE user_id = $1", [
-      3,
-    ]);
-
-    if (res.rows[0]) {
-      console.log(res.rows[0]);
-      socket.to(res.rows[0].socket_id).emit("test", {
-        msg: "you got this from the socket server",
-        done: true,
-      });
-    }
-  });
+  socket.on("accept_friend", acceptFriendRequest);
 };

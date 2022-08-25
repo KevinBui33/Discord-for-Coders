@@ -36,11 +36,11 @@ router.get("/friends", async (req, res) => {
   // TODO: Make the online search get only ppl who are online by socket io standards
   switch (type) {
     case "online":
-      queryStr += "SELECT * FROM friendship WHERE user_a = $1 AND status = 1";
+      queryStr += "SELECT * FROM friendship WHERE user_b = $1 AND status = 1";
       queryParams = [user.user_id];
       break;
     case "all":
-      queryStr += "SELECT * FROM friendship WHERE user_a = $1";
+      queryStr += "SELECT * FROM friendship WHERE user_b = $1 AND status = 1";
       queryParams = [user.user_id];
       break;
     case "pending":
