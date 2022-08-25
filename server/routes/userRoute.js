@@ -19,11 +19,14 @@ router.get("/users", async (req, res) => {
     .catch((err) => console.log(err));
 });
 
+/**
+ * Route for getting all friends
+ */
 router.get("/friends", async (req, res) => {
   const { type } = req.query;
   const user = req.user;
 
-  console.log(`Getting \"${type}\" users for user: ${user.user_id}`);
+  console.log(`Getting \"${type}\" friends for user: ${user.user_id}`);
 
   let queryStr = "";
   let queryParams;
@@ -37,7 +40,7 @@ router.get("/friends", async (req, res) => {
       queryParams = [user.user_id];
       break;
     case "all":
-      queryStr += "SELECT * FROM friendship WHERE user_a = $1 AND status = 1";
+      queryStr += "SELECT * FROM friendship WHERE user_a = $1";
       queryParams = [user.user_id];
       break;
     case "pending":
@@ -48,7 +51,7 @@ router.get("/friends", async (req, res) => {
 
   // TODO: rename variables for dynamic querys
   try {
-    const friendRequests = (await db.query(queryStr, queryParams)).rows;
+    const friendRequests = (await db.query(queryStr, queryParams))?.rows;
     console.log("==== Friend requests ====");
     console.log(friendRequests);
 
@@ -75,11 +78,8 @@ router.get("/friends", async (req, res) => {
   }
 });
 
-router.post("friend", (req, res) => {});
-
 /**
- * Route for getting currently logged in user
- * @name get/user
+ * Get currently logged user infomation
  */
 router.get("/user", async (req, res) => {
   const user = req.user;

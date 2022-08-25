@@ -30,9 +30,6 @@ module.exports = (io, socket) => {
 
   /**
    * Send friend request to user
-   * @param {Name which sending friend request to} friendName
-   * @param {Call back function} cb
-   * @returns
    */
   const sendFriendRequst = async (friendName, cb) => {
     console.log(`sending friend request to: ${friendName}`);

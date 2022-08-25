@@ -16,10 +16,10 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import FriendNavBar from "./FriendNavBar";
+import { userApi } from "../../api/userApi";
 
 const Friends = () => {
   const [search, setSearch] = useState("");
-  // const [type, setType] = useState();
   const [usersList, setUsersList] = useState([]);
   const [notification, setNotification] = useState(false);
   const [listStatus, setListStatus] = useState({});
@@ -29,9 +29,11 @@ const Friends = () => {
 
   // Set the inital state for navbar + get all the users friends
   useEffect(() => {
-    // setType("online");
     setListStatus({ type: "Online", subTitle: "Active Users" });
-    console.log(listStatus);
+    async function fetchData() {
+      await userApi.getFriends("online").then((res) => console.log(res));
+    }
+    fetchData();
   }, []);
 
   // Get friend request from server only when user is online
@@ -52,6 +54,10 @@ const Friends = () => {
       case "Pending":
         setListStatus({ type: item, subTitle: "Pending" });
     }
+
+    await userApi.getFriends(item?.toLowerCase()).then((res) => {
+      setUsersList(res.requests);
+    });
   };
   const declineFriend = async (userId) => {};
 
