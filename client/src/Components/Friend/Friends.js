@@ -24,7 +24,6 @@ const Friends = () => {
   const [notification, setNotification] = useState(false);
   const [listStatus, setListStatus] = useState({});
 
-  // API calls
   const socket = useContext(SocketContext);
 
   // Set the inital state for navbar + get all the users friends
@@ -65,6 +64,7 @@ const Friends = () => {
     socket.emit("accept_friend", { userId }, (data, err) => {
       //TODO Display toast msg for accepting friend request + update firend list
       console.log(data);
+      setUsersList(data.data);
     });
   };
 
@@ -100,24 +100,32 @@ const Friends = () => {
                 <ListItem
                   className="user-account-container"
                   secondaryAction={
-                    <div>
-                      <IconButton
-                        edge="end"
-                        onClick={() => {
-                          acceptFriend(user.user_id);
-                        }}
-                      >
-                        <CheckCircleIcon fontSize="large" />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => {
-                          declineFriend(user.user_id);
-                        }}
-                      >
-                        <CancelIcon fontSize="large" />
-                      </IconButton>
-                    </div>
+                    listStatus.type == "Pending" ? (
+                      <div>
+                        <IconButton
+                          edge="end"
+                          onClick={() => {
+                            acceptFriend(user.user_id);
+                          }}
+                        >
+                          <CheckCircleIcon fontSize="large" />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => {
+                            declineFriend(user.user_id);
+                          }}
+                        >
+                          <CancelIcon fontSize="large" />
+                        </IconButton>
+                      </div>
+                    ) : (
+                      <div />
+                    )
                   }
+                  onClick={() => {
+                    console.log("chat thing");
+                  }}
+                  button={() => (listStatus.type == "Pending" ? false : true)}
                 >
                   <ListItemAvatar>
                     <Avatar>

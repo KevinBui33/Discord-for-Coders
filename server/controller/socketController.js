@@ -115,17 +115,34 @@ module.exports = (io, socket) => {
         "UPDATE friendship SET status = 1 WHERE user_a = $1 AND user_b = $2",
         [data.userId, decode.user_id]
       )
-      .then((res) => {
-        cb("sucess", null);
+      .then(async (res) => {
+        await db
+          .query("SELECT * FROM friendship WHERE user_b = $1 AND status = 0", [
+            decode.user_id,
+          ])
+          .then((data) => cb({ msg: "Accepted Friend", data: data.rows }))
+          .catch((err) => cb(null, err));
       })
-      .catch((err) => {});
+      .catch((err) => cb(null, err));
   };
 
   /**
    * Declining friend request
    */
 
-  const declineFriendRequest = async () => {};
+  const declineFriendRequest = async () => {
+    console.log(`Declining friend request from ${data.userId}`);
+    const { decode } = socket.auth;
+
+    await db
+      .query("", [data.userId, decode.user_id])
+      .then((res) => {
+        cb("Declined Friend request", null);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const sendMessage = () => {};
   socket.on("disconnect", disconnect);

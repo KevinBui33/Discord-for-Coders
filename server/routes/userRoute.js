@@ -2,6 +2,7 @@ const express = require("express");
 const db = require("../db/db");
 const jwt = require("jsonwebtoken");
 const { route } = require("./credentailsRoute");
+const { getUserInfo } = require("../utils/helper");
 const router = express.Router();
 
 // Getting all users based off name
@@ -20,6 +21,24 @@ router.get("/users", async (req, res) => {
 });
 
 /**
+ * Get currently logged user infomation
+ */
+router.get("/user", async (req, res) => {
+  const user = req.user;
+
+  await db
+    .query("SELECT * FROM accounts WHERE user_id = $1", [user.user_id])
+    .then((data) => {
+      const { rows } = data;
+      if (rows[0]) {
+        console.log(`user: ${JSON.stringify(rows[0])}`);
+        res.json(rows[0]);
+      }
+    })
+    .catch((err) => console.log(err));
+});
+
+/**
  * Route for getting all friends
  */
 router.get("/friends", async (req, res) => {
@@ -33,7 +52,7 @@ router.get("/friends", async (req, res) => {
 
   // Pending: 0, friend: 1, blocked: 2
 
-  // TODO: Make the online search get only ppl who are online by socket io standards
+  // TODO: Make the online search get only ppl who are online by socket io
   switch (type) {
     case "online":
       queryStr += "SELECT * FROM friendship WHERE user_b = $1 AND status = 1";
@@ -56,19 +75,7 @@ router.get("/friends", async (req, res) => {
     console.log(friendRequests);
 
     const requestsAccounts = await Promise.all(
-      friendRequests.map(async (f) => {
-        try {
-          const friend = await db.query(
-            "SELECT user_id, email, username FROM accounts WHERE user_id = $1",
-            [f.user_a]
-          );
-
-          console.log("Friend account: " + JSON.stringify(friend.rows[0]));
-          return friend.rows[0];
-        } catch (err) {
-          throw err;
-        }
-      })
+      friendRequests.map((f) => getUserInfo(f.user_a))
     );
     console.log(requestsAccounts);
     res.json({ requests: requestsAccounts });
@@ -79,21 +86,8 @@ router.get("/friends", async (req, res) => {
 });
 
 /**
- * Get currently logged user infomation
+ * Accept/Decline friend request
  */
-router.get("/user", async (req, res) => {
-  const user = req.user;
-
-  await db
-    .query("SELECT * FROM accounts WHERE user_id = $1", [user.user_id])
-    .then((data) => {
-      const { rows } = data;
-      if (rows[0]) {
-        console.log(`user: ${JSON.stringify(rows[0])}`);
-        res.json(rows[0]);
-      }
-    })
-    .catch((err) => console.log(err));
-});
+router.post("/friends");
 
 module.exports = router;
