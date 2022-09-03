@@ -7,4 +7,7 @@ export const userApi = {
   getFriends: (type) => {
     return apiProvider.getAll(`friends/?type=${type}`);
   },
+  acceptRequest: (data) => {
+    return apiProvider.post(`friends`, data);
+  },
 };

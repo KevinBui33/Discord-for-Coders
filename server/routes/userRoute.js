@@ -88,6 +88,36 @@ router.get("/friends", async (req, res) => {
 /**
  * Accept/Decline friend request
  */
-router.post("/friends");
+router.post("/friends", async (req, res) => {
+  const { status, userId } = req.body;
+  const user = req.user;
+
+  // Status true = accept friend
+  if (status) {
+    try {
+      const update = await db.query(
+        "UPDATE friendship SET status = 1 WHERE user_a = $1 AND user_b = $2",
+        [userId, user.user_id]
+      );
+
+      if (!update) return res.status(400).send("Friend Request did not work");
+
+      const remainingRequest = await db.query(
+        "SELECT * FROM friendship WHERE user_b = $1 AND status = 0",
+        [user.user_id]
+      );
+
+      const requestAccount = await Promise.all(
+        remainingRequest?.rows.map((r) => getUserInfo(r.user_a))
+      );
+
+      console.log(requestAccount);
+      res.send({ requestAccount });
+    } catch (err) {}
+  } else {
+  }
+});
 
 module.exports = router;
+
+// cb({ msg: "Accepted Friend", data: data.rows })

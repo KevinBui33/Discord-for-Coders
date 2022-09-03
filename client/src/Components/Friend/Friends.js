@@ -30,7 +30,9 @@ const Friends = () => {
   useEffect(() => {
     setListStatus({ type: "Online", subTitle: "Active Users" });
     async function fetchData() {
-      await userApi.getFriends("online").then((res) => console.log(res));
+      await userApi
+        .getFriends("online")
+        .then((res) => setUsersList(res.requests));
     }
     fetchData();
   }, []);
@@ -61,10 +63,9 @@ const Friends = () => {
   const declineFriend = async (userId) => {};
 
   const acceptFriend = async (userId) => {
-    socket.emit("accept_friend", { userId }, (data, err) => {
-      //TODO Display toast msg for accepting friend request + update firend list
-      console.log(data);
-      setUsersList(data.data);
+    await userApi.acceptRequest({ userId, status: true }).then((res) => {
+      console.log(res);
+      setUsersList(res.requestAccount);
     });
   };
 
@@ -122,9 +123,6 @@ const Friends = () => {
                       <div />
                     )
                   }
-                  onClick={() => {
-                    console.log("chat thing");
-                  }}
                   button={() => (listStatus.type == "Pending" ? false : true)}
                 >
                   <ListItemAvatar>
