@@ -93,8 +93,9 @@ router.post("/friends", async (req, res) => {
   const user = req.user;
 
   // Status true = accept friend
-  if (status) {
-    try {
+
+  try {
+    if (status) {
       const update = await db.query(
         "UPDATE friendship SET status = 1 WHERE user_a = $1 AND user_b = $2",
         [userId, user.user_id]
@@ -113,8 +114,29 @@ router.post("/friends", async (req, res) => {
 
       console.log(requestAccount);
       res.send({ requestAccount });
-    } catch (err) {}
-  } else {
+    } else {
+      console.log("declining things");
+      const decline = await db.query(
+        "DELETE FROM friendship WHERE user_a = $1 AND user_b = $2",
+        [userId, user.user_id]
+      );
+
+      if (!decline) return res.status(400).send("Decline did not work");
+
+      const remainingRequest = await db.query(
+        "SELECT * FROM friendship WHERE user_b = $1 AND status = 0",
+        [user.user_id]
+      );
+
+      const requestAccount = await Promise.all(
+        remainingRequest?.rows.map((r) => getUserInfo(r.user_a))
+      );
+
+      console.log(requestAccount);
+      res.send({ requestAccount });
+    }
+  } catch (err) {
+    console.log(err);
   }
 });
 

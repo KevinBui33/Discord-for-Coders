@@ -10,4 +10,7 @@ export const userApi = {
   acceptRequest: (data) => {
     return apiProvider.post(`friends`, data);
   },
+  declineRequest: (data) => {
+    return apiProvider.post(`friends`, data);
+  },
 };

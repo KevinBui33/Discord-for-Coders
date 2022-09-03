@@ -60,8 +60,16 @@ const Friends = () => {
       setUsersList(res.requests);
     });
   };
-  const declineFriend = async (userId) => {};
 
+  // Declining friend request
+  const declineFriend = async (userId) => {
+    await userApi.declineRequest({ userId, status: false }).then((res) => {
+      console.log(res);
+      setUsersList(res.requestAccount);
+    });
+  };
+
+  // Accepting friend request
   const acceptFriend = async (userId) => {
     await userApi.acceptRequest({ userId, status: true }).then((res) => {
       console.log(res);
