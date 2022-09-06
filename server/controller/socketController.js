@@ -1,7 +1,9 @@
 const db = require("../db/db");
 
 module.exports = (io, socket) => {
-  console.log(`user connected: ${socket.auth.io} - socket id: ${socket.id}`);
+  console.log(
+    `user connected: auth - ${socket.auth.io}, socket id - ${socket.id}`
+  );
   console.log(`user id: ${socket.auth.decode.user_id}`);
 
   /**

@@ -12,6 +12,8 @@ import SendIcon from "@mui/icons-material/Send";
 import React, { useContext, useEffect, useState } from "react";
 
 import { SocketContext } from "../../Context/SocketProvider";
+import { getCurrentPMUser } from "../../features/chat/chatSlice";
+import { useSelector } from "react-redux";
 
 const testMessages = [
   { name: "www", message: "hello" },
@@ -44,15 +46,17 @@ const Chat = () => {
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
   const socket = useContext(SocketContext);
+  const { privateMessage } = useSelector((state) => state.chat);
 
   useEffect(() => {
     setMessages(testMessages);
+    console.log(privateMessage);
   }, []);
 
   return (
     <div className="chat-container">
       <div className="chat-header">
-        <Typography variant="h5">some person</Typography>
+        <Typography variant="h5">{privateMessage.username}</Typography>
       </div>
       <div className="chat-window-container">
         <div className="chat-window">

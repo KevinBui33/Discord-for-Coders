@@ -17,12 +17,16 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import FriendNavBar from "./FriendNavBar";
 import { userApi } from "../../api/userApi";
+import { useDispatch } from "react-redux";
+import { changePMUser, setCurrentView } from "../../features/chat/chatSlice";
 
 const Friends = () => {
   const [search, setSearch] = useState("");
   const [usersList, setUsersList] = useState([]);
   const [notification, setNotification] = useState(false);
   const [listStatus, setListStatus] = useState({});
+
+  const dispatch = useDispatch();
 
   const socket = useContext(SocketContext);
 
@@ -77,6 +81,12 @@ const Friends = () => {
     });
   };
 
+  const privateMsg = (pmUser) => {
+    if (listStatus.type == "Pending") return;
+    dispatch(changePMUser({ pmUser }));
+    dispatch(setCurrentView("chat"));
+  };
+
   return (
     <div className="friend-container">
       <FriendNavBar
@@ -127,11 +137,10 @@ const Friends = () => {
                           <CancelIcon fontSize="large" />
                         </IconButton>
                       </div>
-                    ) : (
-                      <div />
-                    )
+                    ) : null
                   }
-                  button={() => (listStatus.type == "Pending" ? false : true)}
+                  button={listStatus.type == "Pending" ? false : true}
+                  onClick={() => privateMsg(user)}
                 >
                   <ListItemAvatar>
                     <Avatar>
@@ -140,7 +149,13 @@ const Friends = () => {
                   </ListItemAvatar>
                   <div>
                     <ListItemText primary={user.username} />
-                    <ListItemText secondary="Incoming Friend Request" />
+                    <ListItemText
+                      secondary={
+                        listStatus.type == "Pending"
+                          ? "Incoming Friend Request"
+                          : ""
+                      }
+                    />
                   </div>
                 </ListItem>
               </div>
